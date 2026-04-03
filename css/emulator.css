@@ -245,84 +245,6 @@
   opacity: 0.88;
 }
 
-/* ─── Browser Picker ─────────────────────────────────────────────────── */
-
-.emulator-browser-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 16px 10px;
-  border-top: 1px solid var(--md-sys-color-outline-variant);
-}
-
-.emulator-browser-label {
-  font: var(--md-sys-typescale-label-medium);
-  color: var(--md-sys-color-on-surface-variant);
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.emulator-browser-pills {
-  display: flex;
-  gap: 6px;
-  flex-wrap: nowrap;
-  flex: 1;
-}
-
-.emulator-browser-btn {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  padding: 5px 9px;
-  border-radius: 16px;
-  border: 1.5px solid var(--md-sys-color-outline-variant);
-  background: transparent;
-  color: var(--md-sys-color-on-surface-variant);
-  font: var(--md-sys-typescale-label-small);
-  font-weight: 500;
-  cursor: pointer;
-  transition: border-color 0.15s, background 0.15s, color 0.15s;
-  white-space: nowrap;
-  font-family: inherit;
-}
-
-.emulator-browser-btn:hover {
-  background: var(--bg-hover);
-  color: var(--md-sys-color-on-surface);
-  border-color: var(--md-sys-color-outline);
-}
-
-.emulator-browser-btn.active {
-  border-color: var(--md-sys-color-primary);
-  background: color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent);
-  color: var(--md-sys-color-primary);
-}
-
-/* Hint toast shown for Firefox / Safari */
-.emulator-hint {
-  display: flex;
-  align-items: flex-start;
-  gap: 7px;
-  margin: 0 16px 8px;
-  padding: 9px 12px;
-  border-radius: 8px;
-  background: color-mix(in srgb, var(--md-sys-color-primary) 10%, var(--md-sys-color-surface-container));
-  border: 1px solid color-mix(in srgb, var(--md-sys-color-primary) 25%, transparent);
-  color: var(--md-sys-color-on-surface);
-  font: var(--md-sys-typescale-body-small);
-  line-height: 1.5;
-  animation: hintIn 0.2s ease;
-}
-
-.emulator-hint strong {
-  font-weight: 600;
-}
-
-@keyframes hintIn {
-  from { opacity: 0; transform: translateY(-4px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
 /* ─── Tool Drawer ─────────────────────────────────────────────────────── */
 
 .tool-drawer {
@@ -380,28 +302,34 @@
   color: var(--md-sys-color-primary);
 }
 
-/* ─── "+" add tab button ──────────────────────────────────────────────── */
+/* ─── "+" add tab button — MD3 tonal chip, flush right ───────────────── */
 
 .tab-add-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  min-width: 30px;
-  height: 100%;
-  border: none;
-  background: transparent;
+  gap: 4px;
+  margin-left: auto;
+  padding: 0 12px;
+  height: calc(100% - 8px);
+  align-self: center;
+  margin-right: 6px;
+  border-radius: 8px;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  background: var(--md-sys-color-surface-container-high);
   color: var(--md-sys-color-on-surface-variant);
   cursor: pointer;
-  padding: 0;
+  font: var(--md-sys-typescale-label-medium);
+  font-family: inherit;
+  white-space: nowrap;
   flex-shrink: 0;
-  transition: color 0.15s, background 0.15s;
-  border-left: 1px solid var(--md-sys-color-outline-variant);
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
 
 .tab-add-btn:hover {
-  background: var(--bg-hover);
+  background: var(--md-sys-color-surface-container-highest);
   color: var(--md-sys-color-on-surface);
+  border-color: var(--md-sys-color-outline);
 }
 
 /* ─── Tab close button ────────────────────────────────────────────────── */
