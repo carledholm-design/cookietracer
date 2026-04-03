@@ -96,6 +96,7 @@ class ScreenEmulator {
       const w = this.isLandscape ? this.selectedDevice.h : this.selectedDevice.w;
       const h = this.isLandscape ? this.selectedDevice.w : this.selectedDevice.h;
 
+      const originalHTML = openBtn.innerHTML;
       openBtn.disabled = true;
       openBtn.textContent = 'Opening...';
 
@@ -106,6 +107,7 @@ class ScreenEmulator {
       }
 
       setTimeout(() => {
+        openBtn.innerHTML = originalHTML;
         openBtn.disabled = false;
         this.updateOpenBtn();
       }, 800);
