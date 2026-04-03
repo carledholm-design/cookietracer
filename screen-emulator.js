@@ -1,4 +1,4 @@
-// Screen Emulator — opens pinned URL in a sized window for the selected browser
+// Screen Emulator — opens pinned URL in a sized Chrome window
 
 const EMULATOR_DEVICES = {
   mobile: [
@@ -24,19 +24,11 @@ const EMULATOR_DEVICES = {
   ]
 };
 
-const BROWSER_NAMES = {
-  chrome: 'Chrome',
-  edge: 'Edge',
-  firefox: 'Firefox',
-  safari: 'Safari'
-};
-
 class ScreenEmulator {
   constructor() {
     this.currentCategory = 'mobile';
     this.selectedDevice = null;
     this.isLandscape = false;
-    this.selectedBrowser = 'chrome';
     this.customW = 0;
     this.customH = 0;
     this.init();
@@ -46,7 +38,6 @@ class ScreenEmulator {
     this.bindCategoryPills();
     this.bindCustomInputs();
     this.bindRotate();
-    this.bindBrowserPicker();
     this.bindOpenBtn();
     this.renderGrid('mobile');
     this.restoreState();
@@ -96,88 +87,31 @@ class ScreenEmulator {
     });
   }
 
-  bindBrowserPicker() {
-    document.querySelectorAll('.emulator-browser-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.emulator-browser-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.selectedBrowser = btn.dataset.browser;
-        this.updateOpenBtn();
-        this.saveState();
-      });
-    });
-  }
-
   bindOpenBtn() {
     const openBtn = document.getElementById('emulatorOpenBtn');
     if (!openBtn) return;
-
     openBtn.addEventListener('click', async () => {
       if (!this.selectedDevice) return;
-
       const url = await this.getPinnedUrl();
       const w = this.isLandscape ? this.selectedDevice.h : this.selectedDevice.w;
       const h = this.isLandscape ? this.selectedDevice.w : this.selectedDevice.h;
-      const browserName = BROWSER_NAMES[this.selectedBrowser] || 'Browser';
+
       const originalHTML = openBtn.innerHTML;
-
       openBtn.disabled = true;
+      openBtn.textContent = 'Opening...';
 
-      // Chrome and Edge are both Chromium — chrome.windows.create works in both
-      if (this.selectedBrowser === 'chrome' || this.selectedBrowser === 'edge') {
-        openBtn.querySelector('#emulatorOpenLabel').textContent = 'Opening...';
-        try {
-          await chrome.windows.create({
-            url: url || 'about:blank',
-            width: w,
-            height: h,
-            type: 'popup'
-          });
-        } catch (e) {
-          console.error('Screen Emulator: failed to open window', e);
-        }
-        setTimeout(() => {
-          openBtn.innerHTML = originalHTML;
-          openBtn.disabled = false;
-          this.updateOpenBtn();
-        }, 800);
-
-      } else {
-        // Firefox / Safari — copy URL to clipboard and show feedback
-        const labelEl = openBtn.querySelector('#emulatorOpenLabel');
-        try {
-          await navigator.clipboard.writeText(url || '');
-          labelEl.textContent = 'URL Copied!';
-          this.showBrowserHint(browserName, w, h);
-        } catch (e) {
-          labelEl.textContent = 'No URL pinned';
-        }
-        setTimeout(() => {
-          openBtn.innerHTML = originalHTML;
-          openBtn.disabled = false;
-          this.updateOpenBtn();
-        }, 2000);
+      try {
+        await chrome.windows.create({ url: url || 'about:blank', width: w, height: h, type: 'popup' });
+      } catch (e) {
+        console.error('Screen Emulator: failed to open window', e);
       }
+
+      setTimeout(() => {
+        openBtn.innerHTML = originalHTML;
+        openBtn.disabled = false;
+        this.updateOpenBtn();
+      }, 800);
     });
-  }
-
-  showBrowserHint(browserName, w, h) {
-    const existing = document.getElementById('emulatorHint');
-    if (existing) existing.remove();
-
-    const hint = document.createElement('div');
-    hint.id = 'emulatorHint';
-    hint.className = 'emulator-hint';
-    hint.innerHTML = `
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px">
-        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-      </svg>
-      <span>Open ${browserName} and paste the URL. Resize the window to <strong>${w} × ${h} px</strong>.</span>
-    `;
-    const actions = document.querySelector('.emulator-actions');
-    if (actions) actions.after(hint);
-
-    setTimeout(() => hint.remove(), 6000);
   }
 
   async getPinnedUrl() {
@@ -255,26 +189,20 @@ class ScreenEmulator {
 
   updateOpenBtn() {
     const openBtn = document.getElementById('emulatorOpenBtn');
-    const labelEl = document.getElementById('emulatorOpenLabel');
-    if (!openBtn || !labelEl) return;
+    if (!openBtn) return;
     openBtn.disabled = !this.selectedDevice;
-
-    const browserName = BROWSER_NAMES[this.selectedBrowser] || 'Window';
-    const needsCopy = this.selectedBrowser === 'firefox' || this.selectedBrowser === 'safari';
-    labelEl.textContent = needsCopy
-      ? `Copy URL for ${browserName}`
-      : `Open in ${browserName}`;
   }
 
   saveState() {
     try {
-      chrome.storage.local.set({
-        emulatorState: {
-          category: this.currentCategory,
-          device: this.selectedDevice,
-          browser: this.selectedBrowser
-        }
-      });
+      if (this.selectedDevice) {
+        chrome.storage.local.set({
+          emulatorState: {
+            category: this.currentCategory,
+            device: this.selectedDevice
+          }
+        });
+      }
     } catch (e) {}
   }
 
@@ -284,17 +212,9 @@ class ScreenEmulator {
         const saved = result.emulatorState;
         if (!saved) return;
 
-        // Restore browser
-        if (saved.browser) {
-          const browserBtn = document.querySelector(`.emulator-browser-btn[data-browser="${saved.browser}"]`);
-          if (browserBtn) browserBtn.click();
-        }
-
-        // Restore category
         const catBtn = document.querySelector(`.emulator-cat[data-cat="${saved.category}"]`);
         if (catBtn) catBtn.click();
 
-        // Restore device selection
         if (saved.device && saved.category !== 'custom') {
           const grid = document.getElementById('emulatorGrid');
           const devices = EMULATOR_DEVICES[saved.category] || [];
