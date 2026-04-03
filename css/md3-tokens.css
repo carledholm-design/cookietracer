@@ -1,0 +1,222 @@
+/* ==========================================================================
+   Material Design 3 (Material You) â€” Design Token System
+   Cookie Tracer+ v18.0.0
+   ========================================================================== */
+
+/* --- MD3 Color Roles (Light) ---
+   Seed: #1a73e8 (Professional Blue)
+   Generated via MD3 tonal palette methodology
+*/
+:root {
+  /* Primary */
+  --md-sys-color-primary: #1a6dd2;
+  --md-sys-color-on-primary: #ffffff;
+  --md-sys-color-primary-container: #d4e3ff;
+  --md-sys-color-on-primary-container: #001c3a;
+
+  /* Secondary */
+  --md-sys-color-secondary: #555f71;
+  --md-sys-color-on-secondary: #ffffff;
+  --md-sys-color-secondary-container: #d9e3f8;
+  --md-sys-color-on-secondary-container: #121c2b;
+
+  /* Tertiary */
+  --md-sys-color-tertiary: #6e5676;
+  --md-sys-color-on-tertiary: #ffffff;
+  --md-sys-color-tertiary-container: #f8d8ff;
+  --md-sys-color-on-tertiary-container: #271430;
+
+  /* Error */
+  --md-sys-color-error: #ba1a1a;
+  --md-sys-color-on-error: #ffffff;
+  --md-sys-color-error-container: #ffdad6;
+  --md-sys-color-on-error-container: #410002;
+
+  /* Surface / Background */
+  --md-sys-color-surface: #f9f9ff;
+  --md-sys-color-surface-dim: #d8dae0;
+  --md-sys-color-surface-bright: #f9f9ff;
+  --md-sys-color-on-surface: #191c20;
+  --md-sys-color-on-surface-variant: #43474e;
+
+  /* Surface containers (MD3 tonal elevation) */
+  --md-sys-color-surface-container-lowest: #ffffff;
+  --md-sys-color-surface-container-low: #f3f3f9;
+  --md-sys-color-surface-container: #edeff5;
+  --md-sys-color-surface-container-high: #e7e8ee;
+  --md-sys-color-surface-container-highest: #e1e2e8;
+
+  /* Inverse */
+  --md-sys-color-inverse-surface: #2e3036;
+  --md-sys-color-inverse-on-surface: #f0f0f6;
+  --md-sys-color-inverse-primary: #a5c8ff;
+
+  /* Outline */
+  --md-sys-color-outline: #73777f;
+  --md-sys-color-outline-variant: #c3c6cf;
+
+  /* Extended palette (for conditions/status) */
+  --md-ext-color-success: #1b6d30;
+  --md-ext-color-on-success: #ffffff;
+  --md-ext-color-success-container: #a4f5a2;
+  --md-ext-color-on-success-container: #002106;
+
+  --md-ext-color-warning: #7d5700;
+  --md-ext-color-on-warning: #ffffff;
+  --md-ext-color-warning-container: #ffdea3;
+  --md-ext-color-on-warning-container: #271900;
+
+  /* Scrim */
+  --md-sys-color-scrim: #000000;
+  --md-sys-color-shadow: #000000;
+
+  /* --- Shorthand aliases for legacy var(--accent) etc. --- */
+  --bg: var(--md-sys-color-surface);
+  --card: var(--md-sys-color-surface-container-lowest);
+  --text: var(--md-sys-color-on-surface);
+  --secondary: var(--md-sys-color-on-surface-variant);
+  --separator: var(--md-sys-color-outline-variant);
+  --accent: var(--md-sys-color-primary);
+  --green: var(--md-ext-color-success);
+  --red: var(--md-sys-color-error);
+  --orange: var(--md-ext-color-warning);
+  --text-dim: var(--md-sys-color-on-surface-variant);
+  --bg-hover: color-mix(in srgb, var(--md-sys-color-on-surface) 8%, transparent);
+  --shadow: none;
+
+  color-scheme: light dark;
+}
+
+/* --- MD3 Color Roles (Dark) --- */
+:root[data-theme="dark"] {
+  --md-sys-color-primary: #a5c8ff;
+  --md-sys-color-on-primary: #003060;
+  --md-sys-color-primary-container: #004787;
+  --md-sys-color-on-primary-container: #d4e3ff;
+
+  --md-sys-color-secondary: #bdc7dc;
+  --md-sys-color-on-secondary: #273141;
+  --md-sys-color-secondary-container: #3d4758;
+  --md-sys-color-on-secondary-container: #d9e3f8;
+
+  --md-sys-color-tertiary: #dbbce3;
+  --md-sys-color-on-tertiary: #3f2846;
+  --md-sys-color-tertiary-container: #563e5d;
+  --md-sys-color-on-tertiary-container: #f8d8ff;
+
+  --md-sys-color-error: #ffb4ab;
+  --md-sys-color-on-error: #690005;
+  --md-sys-color-error-container: #93000a;
+  --md-sys-color-on-error-container: #ffdad6;
+
+  --md-sys-color-surface: #111318;
+  --md-sys-color-surface-dim: #111318;
+  --md-sys-color-surface-bright: #37393e;
+  --md-sys-color-on-surface: #e1e2e8;
+  --md-sys-color-on-surface-variant: #c3c6cf;
+
+  --md-sys-color-surface-container-lowest: #0c0e13;
+  --md-sys-color-surface-container-low: #191c20;
+  --md-sys-color-surface-container: #1d2024;
+  --md-sys-color-surface-container-high: #282a2f;
+  --md-sys-color-surface-container-highest: #33353a;
+
+  --md-sys-color-inverse-surface: #e1e2e8;
+  --md-sys-color-inverse-on-surface: #2e3036;
+  --md-sys-color-inverse-primary: #1a6dd2;
+
+  --md-sys-color-outline: #8d9199;
+  --md-sys-color-outline-variant: #43474e;
+
+  --md-ext-color-success: #89d888;
+  --md-ext-color-on-success: #003910;
+  --md-ext-color-success-container: #00531b;
+  --md-ext-color-on-success-container: #a4f5a2;
+
+  --md-ext-color-warning: #f5bf48;
+  --md-ext-color-on-warning: #422c00;
+  --md-ext-color-warning-container: #5f4100;
+  --md-ext-color-on-warning-container: #ffdea3;
+
+  --bg-hover: color-mix(in srgb, var(--md-sys-color-on-surface) 8%, transparent);
+}
+
+/* --- MD3 Typography Scale ---
+   Using Google Sans / Roboto system
+*/
+:root {
+  --md-sys-typescale-display-large: 500 57px/64px 'Google Sans', 'Roboto', sans-serif;
+  --md-sys-typescale-display-medium: 500 45px/52px 'Google Sans', 'Roboto', sans-serif;
+  --md-sys-typescale-display-small: 500 36px/44px 'Google Sans', 'Roboto', sans-serif;
+
+  --md-sys-typescale-headline-large: 500 32px/40px 'Google Sans', 'Roboto', sans-serif;
+  --md-sys-typescale-headline-medium: 500 28px/36px 'Google Sans', 'Roboto', sans-serif;
+  --md-sys-typescale-headline-small: 500 24px/32px 'Google Sans', 'Roboto', sans-serif;
+
+  --md-sys-typescale-title-large: 500 22px/28px 'Google Sans', 'Roboto', sans-serif;
+  --md-sys-typescale-title-medium: 500 16px/24px 'Roboto', sans-serif;
+  --md-sys-typescale-title-small: 500 14px/20px 'Roboto', sans-serif;
+
+  --md-sys-typescale-label-large: 500 14px/20px 'Roboto', sans-serif;
+  --md-sys-typescale-label-medium: 500 12px/16px 'Roboto', sans-serif;
+  --md-sys-typescale-label-small: 500 11px/16px 'Roboto', sans-serif;
+
+  --md-sys-typescale-body-large: 400 16px/24px 'Roboto', sans-serif;
+  --md-sys-typescale-body-medium: 400 14px/20px 'Roboto', sans-serif;
+  --md-sys-typescale-body-small: 400 12px/16px 'Roboto', sans-serif;
+}
+
+/* --- MD3 Elevation (shadow levels) --- */
+:root {
+  --md-sys-elevation-0: none;
+  --md-sys-elevation-1: 0 1px 2px rgba(0,0,0,0.3), 0 1px 3px 1px rgba(0,0,0,0.15);
+  --md-sys-elevation-2: 0 1px 2px rgba(0,0,0,0.3), 0 2px 6px 2px rgba(0,0,0,0.15);
+  --md-sys-elevation-3: 0 4px 8px 3px rgba(0,0,0,0.15), 0 1px 3px rgba(0,0,0,0.3);
+  --md-sys-elevation-4: 0 6px 10px 4px rgba(0,0,0,0.15), 0 2px 3px rgba(0,0,0,0.3);
+  --md-sys-elevation-5: 0 8px 12px 6px rgba(0,0,0,0.15), 0 4px 4px rgba(0,0,0,0.3);
+}
+
+:root[data-theme="dark"] {
+  --md-sys-elevation-1: 0 1px 3px 1px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.6);
+  --md-sys-elevation-2: 0 2px 6px 2px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.6);
+  --md-sys-elevation-3: 0 4px 8px 3px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.6);
+  --md-sys-elevation-4: 0 6px 10px 4px rgba(0,0,0,0.4), 0 2px 3px rgba(0,0,0,0.6);
+  --md-sys-elevation-5: 0 8px 12px 6px rgba(0,0,0,0.4), 0 4px 4px rgba(0,0,0,0.6);
+}
+
+/* --- MD3 Shape Scale --- */
+:root {
+  --md-sys-shape-none: 0px;
+  --md-sys-shape-extra-small: 4px;
+  --md-sys-shape-small: 8px;
+  --md-sys-shape-medium: 12px;
+  --md-sys-shape-large: 16px;
+  --md-sys-shape-extra-large: 28px;
+  --md-sys-shape-full: 9999px;
+}
+
+/* --- MD3 Motion --- */
+:root {
+  --md-sys-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --md-sys-motion-easing-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  --md-sys-motion-easing-decelerate: cubic-bezier(0, 0, 0, 1);
+  --md-sys-motion-easing-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
+  --md-sys-motion-duration-short1: 50ms;
+  --md-sys-motion-duration-short2: 100ms;
+  --md-sys-motion-duration-short3: 150ms;
+  --md-sys-motion-duration-short4: 200ms;
+  --md-sys-motion-duration-medium1: 250ms;
+  --md-sys-motion-duration-medium2: 300ms;
+  --md-sys-motion-duration-medium3: 350ms;
+  --md-sys-motion-duration-medium4: 400ms;
+  --md-sys-motion-duration-long1: 450ms;
+  --md-sys-motion-duration-long2: 500ms;
+}
+
+/* --- MD3 State Layer Opacities --- */
+:root {
+  --md-sys-state-hover: 0.08;
+  --md-sys-state-focus: 0.12;
+  --md-sys-state-pressed: 0.12;
+  --md-sys-state-dragged: 0.16;
+}

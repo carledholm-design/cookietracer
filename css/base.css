@@ -1,0 +1,298 @@
+/* ==========================================================================
+   MD3 Base â€” Foundation Styles
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; padding: 0; }
+
+body {
+  background: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+  font: var(--md-sys-typescale-body-medium);
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- Top App Bar (MD3 Small) --- */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  min-height: 64px;
+  background: var(--md-sys-color-surface);
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  transition: background var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
+}
+
+.titlewrap { display: flex; align-items: center; gap: 12px; }
+.brandIcon { width: 32px; height: 32px; border-radius: var(--md-sys-shape-medium); display: block; object-fit: contain; }
+.titles .apptitle {
+  font: var(--md-sys-typescale-title-large);
+  color: var(--md-sys-color-on-surface);
+  line-height: 1.2;
+}
+.titles .subtitle {
+  font: var(--md-sys-typescale-label-medium);
+  color: var(--md-sys-color-on-surface-variant);
+  letter-spacing: 0.5px;
+}
+
+/* --- Action Buttons (MD3 Standard Icon Button) --- */
+.actions { display: flex; gap: 4px; align-items: center; position: relative; }
+.topControls { display: flex; align-items: center; gap: 4px; }
+
+/* Topbar divider */
+.topbar-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--md-sys-color-outline-variant);
+  margin: 0 4px;
+}
+
+.iconbtn {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--md-sys-shape-full);
+  border: none;
+  background: transparent;
+  color: var(--md-sys-color-on-surface-variant);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  position: relative;
+  transition: background var(--md-sys-motion-duration-short3) var(--md-sys-motion-easing-standard);
+}
+
+.iconbtn svg {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.iconbtn:hover {
+  background: color-mix(in srgb, var(--md-sys-color-on-surface-variant) 8%, transparent);
+}
+.iconbtn:active {
+  background: color-mix(in srgb, var(--md-sys-color-on-surface-variant) 12%, transparent);
+}
+.iconbtn:focus-visible {
+  outline: 2px solid var(--md-sys-color-primary);
+  outline-offset: 2px;
+}
+
+/* --- Overflow Menu (MD3 Menu) --- */
+.menu {
+  position: absolute;
+  right: 0;
+  top: 52px;
+  min-width: 200px;
+  background: var(--md-sys-color-surface-container);
+  border: none;
+  border-radius: var(--md-sys-shape-extra-small);
+  box-shadow: var(--md-sys-elevation-2);
+  padding: 8px 0;
+  display: none;
+  z-index: 200;
+}
+.menu.open { display: block; }
+
+.menuitem {
+  width: 100%;
+  text-align: left;
+  padding: 12px 16px;
+  border: 0;
+  background: transparent;
+  color: var(--md-sys-color-on-surface);
+  font: var(--md-sys-typescale-body-large);
+  cursor: pointer;
+  transition: background var(--md-sys-motion-duration-short3) var(--md-sys-motion-easing-standard);
+}
+.menuitem:hover { background: color-mix(in srgb, var(--md-sys-color-on-surface) 8%, transparent); }
+.menusep { height: 1px; background: var(--md-sys-color-outline-variant); margin: 8px 0; }
+
+/* --- Main Content --- */
+.content { padding: 16px; max-width: 800px; margin: 0 auto; }
+
+/* --- Section Cards (MD3 Card â€” Filled) --- */
+.context, .section {
+  background: var(--md-sys-color-surface-container-lowest);
+  border-radius: var(--md-sys-shape-medium);
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+.context { padding: 16px; }
+
+/* --- Section Header (MD3 label style) --- */
+.sectionHeader {
+  font: var(--md-sys-typescale-label-large);
+  color: var(--md-sys-color-on-surface);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 12px 16px;
+  background: #000;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sectionDescription {
+  font: var(--md-sys-typescale-body-small);
+  color: var(--md-sys-color-on-surface-variant);
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+}
+
+/* --- Key/Value rows --- */
+.divider { height: 1px; background: var(--md-sys-color-outline-variant); margin-left: 16px; }
+.kvlist { padding: 0 16px; }
+.kvrow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  font: var(--md-sys-typescale-body-medium);
+}
+.kvrow:last-child { border-bottom: none; }
+.kvname { font-weight: 500; color: var(--md-sys-color-on-surface); }
+.kvvalue {
+  font-family: 'Roboto Mono', monospace;
+  color: var(--md-sys-color-on-surface-variant);
+  max-width: 60%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* --- Tracking Info --- */
+.trackingLabel {
+  font: var(--md-sys-typescale-label-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--md-sys-color-on-surface-variant);
+  margin-bottom: 4px;
+}
+.trackingUrl {
+  font: var(--md-sys-typescale-body-large);
+  font-weight: 500;
+  word-break: break-all;
+  color: var(--md-sys-color-primary);
+}
+.timestamp {
+  font: var(--md-sys-typescale-body-small);
+  color: var(--md-sys-color-on-surface-variant);
+  margin-top: 8px;
+}
+
+/* --- Disclosure / Expandable (MD3 List Item) --- */
+.disclosure {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  color: var(--md-sys-color-on-surface);
+  font: var(--md-sys-typescale-body-large);
+  transition: background var(--md-sys-motion-duration-short3) var(--md-sys-motion-easing-standard);
+}
+.disclosure:hover { background: color-mix(in srgb, var(--md-sys-color-on-surface) 8%, transparent); }
+.disclabel { font-weight: 500; display: flex; align-items: center; }
+.discmeta { display: flex; align-items: center; gap: 8px; color: var(--md-sys-color-on-surface-variant); font: var(--md-sys-typescale-body-medium); }
+.chev {
+  transition: transform var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+  color: var(--md-sys-color-on-surface-variant);
+  opacity: 0.7;
+}
+.disclosure[aria-expanded="true"] .chev { transform: rotate(90deg); }
+
+/* --- Asset List --- */
+.assetlist { padding: 0 0 0 16px; background: var(--md-sys-color-surface-container-lowest); }
+.assetlist.hidden { display: none; }
+.assetrow {
+  padding: 10px 16px 10px 0;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  font: var(--md-sys-typescale-body-small);
+  word-break: break-all;
+  color: var(--md-sys-color-on-surface-variant);
+}
+.assetrow:last-child { border-bottom: none; }
+
+/* --- Utility --- */
+.hidden { display: none !important; }
+
+/* --- Pin Button (MD3 Filled Tonal Icon Button when active) --- */
+.pinbtn svg {
+  transform: rotate(45deg);
+  transition: transform var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-emphasized);
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+}
+.pinbtn.pinned {
+  background: var(--md-ext-color-success-container) !important;
+  color: var(--md-ext-color-on-success-container) !important;
+}
+.pinbtn.pinned svg {
+  transform: rotate(0deg);
+  stroke: var(--md-ext-color-on-success-container);
+}
+
+/* --- Blocker Button (like pin, red when active) --- */
+.blockerbtn svg {
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  transition: all var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-emphasized);
+}
+.blockerbtn[aria-checked="true"] {
+  background: #d32f2f !important;
+  color: #ffffff !important;
+  animation: scaleIn 0.3s var(--md-sys-motion-easing-emphasized) both;
+}
+.blockerbtn[aria-checked="true"] svg {
+  stroke: #ffffff;
+}
+
+@keyframes scaleIn {
+  0% { transform: scale(0.8); opacity: 0.5; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.pinbtn.pinned { animation: scaleIn 0.3s var(--md-sys-motion-easing-emphasized) both; }
+
+/* --- Scrollbar (MD3 subtle) --- */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--md-sys-color-outline-variant);
+  border-radius: var(--md-sys-shape-full);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--md-sys-color-outline); }
+
+/* --- Theme toggle: show only one icon --- */
+/* Light mode: show moon (click to go dark) */
+#themeToggleBtn .icon-sun { display: none; }
+#themeToggleBtn .icon-moon { display: block; }
+/* Dark mode: show sun (click to go light) */
+:root[data-theme="dark"] #themeToggleBtn .icon-sun { display: block; }
+:root[data-theme="dark"] #themeToggleBtn .icon-moon { display: none; }
+
+/* --- Focus ring --- */
+:focus-visible {
+  outline: 2px solid var(--md-sys-color-primary);
+  outline-offset: 2px;
+}
+button:focus:not(:focus-visible) { outline: none; }

@@ -1,0 +1,130 @@
+/* ==========================================================================
+   MD3 Modals â€” Dialog component
+   ========================================================================== */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.modal.hidden { display: none; }
+
+.modalOverlay {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--md-sys-color-scrim) 32%, transparent);
+  animation: fadeIn var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+  from { transform: scale(0.85); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.modalContent {
+  position: relative;
+  width: min(400px, 90vw);
+  background: var(--md-sys-color-surface-container-high);
+  border-radius: var(--md-sys-shape-extra-large);
+  padding: 24px;
+  box-shadow: var(--md-sys-elevation-3);
+  animation: scaleUp var(--md-sys-motion-duration-medium4) var(--md-sys-motion-easing-emphasized);
+  text-align: center;
+}
+
+.modalClose {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  border-radius: var(--md-sys-shape-full);
+  color: var(--md-sys-color-on-surface-variant);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.modalClose:hover { background: color-mix(in srgb, var(--md-sys-color-on-surface) 8%, transparent); }
+.modalClose svg { width: 16px; height: 16px; stroke: currentColor; fill: none; }
+
+.modalIcon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 16px;
+  border-radius: var(--md-sys-shape-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modalIcon.stop {
+  background: var(--md-sys-color-error-container);
+  color: var(--md-sys-color-on-error-container);
+}
+.modalIcon svg { width: 24px; height: 24px; stroke: currentColor; fill: none; }
+
+.modalTitle {
+  font: var(--md-sys-typescale-headline-small);
+  color: var(--md-sys-color-on-surface);
+  margin-bottom: 8px;
+}
+
+.modalMessage {
+  font: var(--md-sys-typescale-body-medium);
+  color: var(--md-sys-color-on-surface-variant);
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+/* --- MD3 Dialog Actions --- */
+.modalButtons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.modalBtn {
+  padding: 10px 24px;
+  border: none;
+  border-radius: var(--md-sys-shape-full);
+  font: var(--md-sys-typescale-label-large);
+  cursor: pointer;
+  transition: all var(--md-sys-motion-duration-short3) var(--md-sys-motion-easing-standard);
+}
+
+/* Text Button (Cancel) */
+.modalBtn.cancel {
+  background: transparent;
+  color: var(--md-sys-color-primary);
+}
+.modalBtn.cancel:hover {
+  background: color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent);
+}
+
+/* Filled Button (Destructive / Confirm) */
+.modalBtn.destructive {
+  background: var(--md-sys-color-error);
+  color: var(--md-sys-color-on-error);
+}
+.modalBtn.destructive:hover {
+  box-shadow: var(--md-sys-elevation-1);
+}
+
+.modalBtn.confirm {
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+}
+.modalBtn.confirm:hover {
+  box-shadow: var(--md-sys-elevation-1);
+}
