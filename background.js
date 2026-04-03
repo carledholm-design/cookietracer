@@ -394,7 +394,18 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           try { await chrome.windows.update(data.trackedWindowId, { focused: true }); } catch {}
         }
         await chrome.tabs.update(tabId, { active: true });
-        // Inject the overlay into the pinned tab
+        // Inject overlay script programmatically — ensures it runs even in
+        // already-open tabs that loaded before the extension was installed/reloaded.
+        // The guard in emulator-overlay.js prevents double-registration.
+        try {
+          await chrome.scripting.executeScript({
+            target: { tabId },
+            files: ["emulator-overlay.js"]
+          });
+        } catch (injectErr) {
+          logError("OPEN_EMULATOR_IN_TAB inject", injectErr);
+        }
+        // Now the listener is guaranteed to be registered — send show command
         await chrome.tabs.sendMessage(tabId, {
           type: "SHOW_EMULATOR",
           devices: msg.devices,
