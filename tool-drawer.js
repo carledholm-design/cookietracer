@@ -1,21 +1,6 @@
 // Tool Drawer — opens from the "+" tab button, adds/removes tool tabs
 
 const TOOL_DEFINITIONS = {
-  fontchecker: {
-    name: 'Font Inspector',
-    desc: 'Detect fonts, sizes, weights',
-    icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9.5" y1="4" x2="9.5" y2="20"/><line x1="14.5" y1="4" x2="14.5" y2="20"/><line x1="7" y1="20" x2="17" y2="20"/></svg>`
-  },
-  colorinspector: {
-    name: 'Color Inspector',
-    desc: 'Extract palettes & CSS colors',
-    icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="10.5" r="2.5"/><circle cx="8.5" cy="7.5" r="2.5"/><circle cx="6.5" cy="12.5" r="2.5"/><path d="M12 22C6.5 22 2 17.5 2 12s4.5-10 10-10c.926 0 1.648.816 1.648 1.748 0 .896-.538 1.464-1.148 2.252-.61.788-1.5 1.752-1.5 3C11 11.104 11.896 12 13 12h1.5c2.485 0 4.5 2.015 4.5 4.5C19 20.096 16 22 12 22z"/></svg>`
-  },
-  cssinspector: {
-    name: 'CSS Inspector',
-    desc: 'Copy styles, spacing, layout',
-    icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>`
-  },
   screenemulator: {
     name: 'Screen Emulator',
     desc: 'Preview at any screen size',
@@ -24,9 +9,6 @@ const TOOL_DEFINITIONS = {
 };
 
 const TAB_ICONS = {
-  fontchecker: `<svg class="tabIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9.5" y1="4" x2="9.5" y2="20"/><line x1="14.5" y1="4" x2="14.5" y2="20"/><line x1="7" y1="20" x2="17" y2="20"/></svg>`,
-  colorinspector: `<svg class="tabIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="10.5" r="2.5"/><circle cx="8.5" cy="7.5" r="2.5"/><circle cx="6.5" cy="12.5" r="2.5"/><path d="M12 22C6.5 22 2 17.5 2 12s4.5-10 10-10c.926 0 1.648.816 1.648 1.748 0 .896-.538 1.464-1.148 2.252-.61.788-1.5 1.752-1.5 3C11 11.104 11.896 12 13 12h1.5c2.485 0 4.5 2.015 4.5 4.5C19 20.096 16 22 12 22z"/></svg>`,
-  cssinspector: `<svg class="tabIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>`,
   screenemulator: `<svg class="tabIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><rect x="7" y="7" width="6" height="10" rx="1"/></svg>`
 };
 
@@ -53,7 +35,7 @@ class ToolDrawer {
     btn.id = 'addToolBtn';
     btn.title = 'Add Tool';
     btn.setAttribute('aria-label', 'Add Tool');
-    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`;
+    btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Tools`;
     btn.addEventListener('click', () => this.openDrawer());
     tabsContainer.appendChild(btn);
   }
