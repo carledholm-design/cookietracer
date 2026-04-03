@@ -210,17 +210,31 @@ class ScreenEmulator {
 
       const originalHTML = openBtn.innerHTML;
       openBtn.disabled = true;
-      openBtn.textContent = 'Opening...';
+      openBtn.textContent = 'Opening…';
 
       try {
-        for (const entry of this.selectedDevices) {
-          const { device, isLandscape } = entry;
-          const w = isLandscape ? device.h : device.w;
-          const h = isLandscape ? device.w : device.h;
-          await chrome.windows.create({ url: url || 'about:blank', width: w, height: h, type: 'popup' });
-        }
+        // Store launch data for the emulator view tab to read
+        await chrome.storage.local.set({
+          emulatorLaunchData: {
+            devices: this.selectedDevices.map(e => ({
+              device: e.device,
+              isLandscape: e.isLandscape
+            })),
+            url: url || 'about:blank'
+          }
+        });
+
+        // Open the multi-device view as a new tab (to the left of the current tab)
+        const activeTabs = await chrome.tabs.query({ active: true, currentWindow: true });
+        const insertIndex = activeTabs[0]?.index ?? 0;
+
+        await chrome.tabs.create({
+          url: chrome.runtime.getURL('emulator-view.html'),
+          index: insertIndex,
+          active: true
+        });
       } catch (e) {
-        console.error('Screen Emulator: failed to open window', e);
+        console.error('Screen Emulator: failed to open view', e);
       }
 
       setTimeout(() => {
