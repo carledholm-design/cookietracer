@@ -39,6 +39,12 @@
       "matches": ["<all_urls>"],
       "js": ["banner-blocker.js", "console-capture.js"],
       "run_at": "document_start"
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": ["emulator-sync.js"],
+      "all_frames": true,
+      "run_at": "document_start"
     }
   ]
 }
