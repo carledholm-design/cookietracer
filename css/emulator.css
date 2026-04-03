@@ -1,0 +1,351 @@
+/* ─── Screen Emulator ─────────────────────────────────────────────────── */
+
+.emulator-categories {
+  display: flex;
+  gap: 4px;
+  padding: 10px 12px 4px;
+  flex-wrap: wrap;
+}
+
+.emulator-cat {
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--ct-outline);
+  background: transparent;
+  color: var(--ct-on-surface-variant);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+
+.emulator-cat:hover {
+  background: var(--ct-surface-variant);
+  color: var(--ct-on-surface);
+}
+
+.emulator-cat.active {
+  background: var(--ct-primary);
+  color: var(--ct-on-primary);
+  border-color: var(--ct-primary);
+}
+
+/* Device Grid */
+.emulator-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 10px 12px;
+}
+
+.emulator-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 6px 8px;
+  border-radius: 10px;
+  border: 1.5px solid var(--ct-outline-variant);
+  background: var(--ct-surface-container);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, transform 0.1s;
+  text-align: center;
+}
+
+.emulator-card:hover {
+  border-color: var(--ct-primary);
+  background: var(--ct-surface-variant);
+}
+
+.emulator-card.active {
+  border-color: var(--ct-primary);
+  background: color-mix(in srgb, var(--ct-primary) 12%, transparent);
+  box-shadow: 0 0 0 1px var(--ct-primary);
+}
+
+.emulator-card-screen {
+  width: 36px;
+  border: 1.5px solid var(--ct-outline);
+  border-radius: 3px;
+  overflow: hidden;
+  background: var(--ct-surface);
+  flex-shrink: 0;
+}
+
+.emulator-card.active .emulator-card-screen {
+  border-color: var(--ct-primary);
+}
+
+.emulator-card-screen-inner {
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    135deg,
+    var(--ct-surface-variant) 0px,
+    var(--ct-surface-variant) 1px,
+    transparent 1px,
+    transparent 6px
+  );
+}
+
+.emulator-card-name {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--ct-on-surface);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.emulator-card-dims {
+  font-size: 9px;
+  color: var(--ct-on-surface-variant);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Custom size inputs */
+.emulator-custom {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: var(--ct-surface-container);
+  border-radius: 10px;
+  margin: 0 12px;
+}
+
+.emulator-custom.hidden {
+  display: none;
+}
+
+.emulator-custom input {
+  flex: 1;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1.5px solid var(--ct-outline);
+  background: var(--ct-surface);
+  color: var(--ct-on-surface);
+  font-size: 13px;
+  font-family: inherit;
+  text-align: center;
+  transition: border-color 0.15s;
+}
+
+.emulator-custom input:focus {
+  outline: none;
+  border-color: var(--ct-primary);
+}
+
+.emulator-custom span {
+  color: var(--ct-on-surface-variant);
+  font-size: 14px;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+/* Selected device bar */
+.emulator-selected {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  margin: 4px 12px 0;
+  border-radius: 8px;
+  background: var(--ct-surface-container);
+  min-height: 34px;
+  gap: 8px;
+}
+
+.emulator-selected:not(.has-device) {
+  opacity: 0.5;
+}
+
+#emulatorDeviceName {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ct-on-surface);
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#emulatorDimensions {
+  font-size: 11px;
+  color: var(--ct-primary);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Action row */
+.emulator-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px 12px;
+}
+
+.emulator-rotate {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1.5px solid var(--ct-outline);
+  background: transparent;
+  color: var(--ct-on-surface-variant);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s, transform 0.2s;
+}
+
+.emulator-rotate:hover {
+  background: var(--ct-surface-variant);
+  color: var(--ct-on-surface);
+}
+
+.emulator-rotate.rotated {
+  color: var(--ct-primary);
+  border-color: var(--ct-primary);
+  transform: rotate(90deg);
+}
+
+.emulator-open-btn {
+  flex: 1;
+  padding: 9px 16px;
+  border-radius: 8px;
+  border: none;
+  background: var(--ct-primary);
+  color: var(--ct-on-primary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s, background 0.15s;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.emulator-open-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.emulator-open-btn:not(:disabled):hover {
+  opacity: 0.88;
+}
+
+/* Tool Drawer open/close */
+.tool-drawer {
+  position: fixed;
+  top: 0;
+  right: -280px;
+  width: 280px;
+  height: 100%;
+  background: var(--ct-surface-container-high);
+  border-left: 1px solid var(--ct-outline-variant);
+  z-index: 200;
+  transition: right 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.tool-drawer.open {
+  right: 0;
+}
+
+.tool-drawer-scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 199;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.tool-drawer-scrim.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* Checked state in drawer */
+.tool-drawer-item.active {
+  background: color-mix(in srgb, var(--ct-primary) 10%, transparent);
+}
+
+.tool-drawer-item.active .tool-drawer-name {
+  color: var(--ct-primary);
+}
+
+.tool-drawer-status {
+  display: flex;
+  align-items: center;
+  color: var(--ct-on-surface-variant);
+  flex-shrink: 0;
+}
+
+.tool-drawer-item.active .tool-drawer-status {
+  color: var(--ct-primary);
+}
+
+/* "+" add tab button */
+.tab-add-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 100%;
+  min-width: 28px;
+  border: none;
+  background: transparent;
+  color: var(--ct-on-surface-variant);
+  cursor: pointer;
+  border-radius: 0;
+  flex-shrink: 0;
+  padding: 0;
+  transition: color 0.15s, background 0.15s;
+  border-left: 1px solid var(--ct-outline-variant);
+}
+
+.tab-add-btn:hover {
+  background: var(--ct-surface-variant);
+  color: var(--ct-on-surface);
+}
+
+/* Tab close button */
+.tab-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  border: none;
+  background: transparent;
+  color: var(--ct-on-surface-variant);
+  cursor: pointer;
+  padding: 0;
+  margin-left: 2px;
+  opacity: 0;
+  transition: opacity 0.15s, background 0.15s;
+  flex-shrink: 0;
+}
+
+.tab:hover .tab-close,
+.tab.active .tab-close {
+  opacity: 1;
+}
+
+.tab-close:hover {
+  background: var(--ct-surface-variant);
+  color: var(--ct-error, #ef4444);
+}
