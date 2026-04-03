@@ -244,4 +244,10 @@ const CSS = `
 .frot{color:#7c9eff;font-size:10px}
 .fdims{font-size:10px;font-weight:700;color:#7c9eff;white-space:nowrap;flex-shrink:0;font-variant-numeric:tabular-nums}
 .fframe{flex:1;width:100%;border:none;display:block;background:#fff}
+
+/* Force visible horizontal scrollbar on the stage */
+.stage::-webkit-scrollbar{height:10px}
+.stage::-webkit-scrollbar-track{background:rgba(255,255,255,0.04);border-radius:0}
+.stage::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.22);border-radius:5px;border:2px solid #0d1117}
+.stage::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.4)}
 `;
