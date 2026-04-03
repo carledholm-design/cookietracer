@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Cookie Tracer+",
-  "version": "19.1.18",
+  "version": "19.2.0",
   "description": "QA tool for AustedoXR.com and UAT. Traces journey cookies, simulates HD and TD visitor paths, and runs built-in diagnostics.",
   "permissions": [
     "browsingData",
