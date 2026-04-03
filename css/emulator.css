@@ -1,34 +1,34 @@
 /* ─── Screen Emulator ─────────────────────────────────────────────────── */
 
+/* Category pills */
 .emulator-categories {
   display: flex;
-  gap: 4px;
-  padding: 10px 12px 4px;
+  gap: 6px;
+  padding: 12px 16px 6px;
   flex-wrap: wrap;
 }
 
 .emulator-cat {
-  padding: 5px 12px;
+  padding: 5px 14px;
   border-radius: 20px;
-  border: 1px solid var(--ct-outline);
+  border: 1px solid var(--md-sys-color-outline-variant);
   background: transparent;
-  color: var(--ct-on-surface-variant);
-  font-size: 12px;
-  font-weight: 500;
+  color: var(--md-sys-color-on-surface-variant);
+  font: var(--md-sys-typescale-label-medium);
   cursor: pointer;
   transition: background 0.15s, color 0.15s, border-color 0.15s;
   white-space: nowrap;
 }
 
 .emulator-cat:hover {
-  background: var(--ct-surface-variant);
-  color: var(--ct-on-surface);
+  background: var(--bg-hover);
+  color: var(--md-sys-color-on-surface);
 }
 
 .emulator-cat.active {
-  background: var(--ct-primary);
-  color: var(--ct-on-primary);
-  border-color: var(--ct-primary);
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  border-color: var(--md-sys-color-primary);
 }
 
 /* Device Grid */
@@ -36,63 +36,69 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
-  padding: 10px 12px;
+  padding: 8px 16px;
 }
 
 .emulator-card {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   padding: 10px 6px 8px;
-  border-radius: 10px;
-  border: 1.5px solid var(--ct-outline-variant);
-  background: var(--ct-surface-container);
+  border-radius: 12px;
+  border: 1.5px solid var(--md-sys-color-outline-variant);
+  background: var(--md-sys-color-surface-container);
   cursor: pointer;
-  transition: border-color 0.15s, background 0.15s, transform 0.1s;
+  transition: border-color 0.15s, background 0.15s;
   text-align: center;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .emulator-card:hover {
-  border-color: var(--ct-primary);
-  background: var(--ct-surface-variant);
+  border-color: var(--md-sys-color-primary);
+  background: var(--md-sys-color-surface-container-high);
 }
 
 .emulator-card.active {
-  border-color: var(--ct-primary);
-  background: color-mix(in srgb, var(--ct-primary) 12%, transparent);
-  box-shadow: 0 0 0 1px var(--ct-primary);
+  border-color: var(--md-sys-color-primary);
+  background: color-mix(in srgb, var(--md-sys-color-primary) 10%, var(--md-sys-color-surface-container));
+  box-shadow: 0 0 0 1px var(--md-sys-color-primary);
 }
 
+/* Screen thumbnail */
 .emulator-card-screen {
-  width: 36px;
-  border: 1.5px solid var(--ct-outline);
-  border-radius: 3px;
+  width: 28px;
+  border: 1.5px solid var(--md-sys-color-outline);
+  border-radius: 2px;
   overflow: hidden;
-  background: var(--ct-surface);
+  background: var(--md-sys-color-surface-container-lowest);
   flex-shrink: 0;
+  position: relative;
 }
 
 .emulator-card.active .emulator-card-screen {
-  border-color: var(--ct-primary);
+  border-color: var(--md-sys-color-primary);
 }
 
 .emulator-card-screen-inner {
   width: 100%;
   height: 100%;
   background: repeating-linear-gradient(
-    135deg,
-    var(--ct-surface-variant) 0px,
-    var(--ct-surface-variant) 1px,
+    -45deg,
+    var(--md-sys-color-outline-variant) 0px,
+    var(--md-sys-color-outline-variant) 1px,
     transparent 1px,
-    transparent 6px
+    transparent 5px
   );
+  opacity: 0.5;
 }
 
+/* Device label */
 .emulator-card-name {
-  font-size: 10px;
+  font: var(--md-sys-typescale-label-small);
   font-weight: 600;
-  color: var(--ct-on-surface);
+  color: var(--md-sys-color-on-surface);
   line-height: 1.2;
   white-space: nowrap;
   overflow: hidden;
@@ -102,8 +108,9 @@
 
 .emulator-card-dims {
   font-size: 9px;
-  color: var(--ct-on-surface-variant);
+  color: var(--md-sys-color-on-surface-variant);
   font-variant-numeric: tabular-nums;
+  line-height: 1;
 }
 
 /* Custom size inputs */
@@ -111,10 +118,8 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 12px;
-  background: var(--ct-surface-container);
-  border-radius: 10px;
-  margin: 0 12px;
+  padding: 12px 16px;
+  margin: 0 0 4px;
 }
 
 .emulator-custom.hidden {
@@ -125,24 +130,23 @@
   flex: 1;
   padding: 8px 10px;
   border-radius: 8px;
-  border: 1.5px solid var(--ct-outline);
-  background: var(--ct-surface);
-  color: var(--ct-on-surface);
-  font-size: 13px;
-  font-family: inherit;
+  border: 1.5px solid var(--md-sys-color-outline-variant);
+  background: var(--md-sys-color-surface-container);
+  color: var(--md-sys-color-on-surface);
+  font: var(--md-sys-typescale-body-medium);
   text-align: center;
   transition: border-color 0.15s;
+  font-family: inherit;
 }
 
 .emulator-custom input:focus {
   outline: none;
-  border-color: var(--ct-primary);
+  border-color: var(--md-sys-color-primary);
 }
 
 .emulator-custom span {
-  color: var(--ct-on-surface-variant);
-  font-size: 14px;
-  font-weight: 500;
+  color: var(--md-sys-color-on-surface-variant);
+  font: var(--md-sys-typescale-title-small);
   flex-shrink: 0;
 }
 
@@ -151,32 +155,32 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 12px;
-  margin: 4px 12px 0;
-  border-radius: 8px;
-  background: var(--ct-surface-container);
-  min-height: 34px;
   gap: 8px;
-}
-
-.emulator-selected:not(.has-device) {
-  opacity: 0.5;
+  padding: 8px 16px;
+  min-height: 34px;
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  margin-top: 4px;
 }
 
 #emulatorDeviceName {
-  font-size: 12px;
+  font: var(--md-sys-typescale-label-medium);
   font-weight: 600;
-  color: var(--ct-on-surface);
+  color: var(--md-sys-color-on-surface-variant);
   flex: 1;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
+.emulator-selected.has-device #emulatorDeviceName {
+  color: var(--md-sys-color-on-surface);
+}
+
 #emulatorDimensions {
-  font-size: 11px;
-  color: var(--ct-primary);
-  font-weight: 600;
+  font: var(--md-sys-typescale-label-medium);
+  color: var(--md-sys-color-primary);
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
@@ -186,32 +190,32 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 12px 12px;
+  padding: 10px 16px 14px;
 }
 
 .emulator-rotate {
   width: 36px;
   height: 36px;
   border-radius: 8px;
-  border: 1.5px solid var(--ct-outline);
+  border: 1.5px solid var(--md-sys-color-outline-variant);
   background: transparent;
-  color: var(--ct-on-surface-variant);
+  color: var(--md-sys-color-on-surface-variant);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  transition: background 0.15s, color 0.15s, transform 0.2s;
+  transition: background 0.15s, color 0.15s, transform 0.25s ease;
 }
 
 .emulator-rotate:hover {
-  background: var(--ct-surface-variant);
-  color: var(--ct-on-surface);
+  background: var(--bg-hover);
+  color: var(--md-sys-color-on-surface);
 }
 
 .emulator-rotate.rotated {
-  color: var(--ct-primary);
-  border-color: var(--ct-primary);
+  color: var(--md-sys-color-primary);
+  border-color: var(--md-sys-color-primary);
   transform: rotate(90deg);
 }
 
@@ -220,12 +224,11 @@
   padding: 9px 16px;
   border-radius: 8px;
   border: none;
-  background: var(--ct-primary);
-  color: var(--ct-on-primary);
-  font-size: 13px;
-  font-weight: 600;
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  font: var(--md-sys-typescale-label-large);
   cursor: pointer;
-  transition: opacity 0.15s, background 0.15s;
+  transition: opacity 0.15s;
   font-family: inherit;
   display: flex;
   align-items: center;
@@ -234,7 +237,7 @@
 }
 
 .emulator-open-btn:disabled {
-  opacity: 0.4;
+  opacity: 0.38;
   cursor: not-allowed;
 }
 
@@ -242,15 +245,16 @@
   opacity: 0.88;
 }
 
-/* Tool Drawer open/close */
+/* ─── Tool Drawer ─────────────────────────────────────────────────────── */
+
 .tool-drawer {
   position: fixed;
   top: 0;
   right: -280px;
   width: 280px;
   height: 100%;
-  background: var(--ct-surface-container-high);
-  border-left: 1px solid var(--ct-outline-variant);
+  background: var(--md-sys-color-surface-container-high);
+  border-left: 1px solid var(--md-sys-color-outline-variant);
   z-index: 200;
   transition: right 0.22s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
@@ -265,7 +269,7 @@
 .tool-drawer-scrim {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(0, 0, 0, 0.4);
   z-index: 199;
   opacity: 0;
   pointer-events: none;
@@ -277,53 +281,55 @@
   pointer-events: all;
 }
 
-/* Checked state in drawer */
 .tool-drawer-item.active {
-  background: color-mix(in srgb, var(--ct-primary) 10%, transparent);
+  background: color-mix(in srgb, var(--md-sys-color-primary) 10%, transparent);
 }
 
 .tool-drawer-item.active .tool-drawer-name {
-  color: var(--ct-primary);
+  color: var(--md-sys-color-primary);
 }
 
 .tool-drawer-status {
   display: flex;
   align-items: center;
-  color: var(--ct-on-surface-variant);
+  color: var(--md-sys-color-on-surface-variant);
   flex-shrink: 0;
+  margin-left: auto;
+  padding-left: 8px;
 }
 
 .tool-drawer-item.active .tool-drawer-status {
-  color: var(--ct-primary);
+  color: var(--md-sys-color-primary);
 }
 
-/* "+" add tab button */
+/* ─── "+" add tab button ──────────────────────────────────────────────── */
+
 .tab-add-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
+  width: 30px;
+  min-width: 30px;
   height: 100%;
-  min-width: 28px;
   border: none;
   background: transparent;
-  color: var(--ct-on-surface-variant);
+  color: var(--md-sys-color-on-surface-variant);
   cursor: pointer;
-  border-radius: 0;
-  flex-shrink: 0;
   padding: 0;
+  flex-shrink: 0;
   transition: color 0.15s, background 0.15s;
-  border-left: 1px solid var(--ct-outline-variant);
+  border-left: 1px solid var(--md-sys-color-outline-variant);
 }
 
 .tab-add-btn:hover {
-  background: var(--ct-surface-variant);
-  color: var(--ct-on-surface);
+  background: var(--bg-hover);
+  color: var(--md-sys-color-on-surface);
 }
 
-/* Tab close button */
+/* ─── Tab close button ────────────────────────────────────────────────── */
+
 .tab-close {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 14px;
@@ -331,13 +337,14 @@
   border-radius: 3px;
   border: none;
   background: transparent;
-  color: var(--ct-on-surface-variant);
+  color: var(--md-sys-color-on-surface-variant);
   cursor: pointer;
   padding: 0;
-  margin-left: 2px;
+  margin-left: 3px;
   opacity: 0;
-  transition: opacity 0.15s, background 0.15s;
+  transition: opacity 0.15s, background 0.15s, color 0.15s;
   flex-shrink: 0;
+  vertical-align: middle;
 }
 
 .tab:hover .tab-close,
@@ -346,6 +353,6 @@
 }
 
 .tab-close:hover {
-  background: var(--ct-surface-variant);
-  color: var(--ct-error, #ef4444);
+  background: color-mix(in srgb, var(--md-sys-color-error) 15%, transparent);
+  color: var(--md-sys-color-error);
 }
