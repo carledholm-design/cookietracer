@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="css/toasts.css?v=18.5" />
   <link rel="stylesheet" href="css/tables.css?v=18.5" />
   <link rel="stylesheet" href="css/modals.css?v=18.5" />
+  <link rel="stylesheet" href="css/emulator.css?v=19" />
 </head>
 
 <body>
@@ -339,6 +340,54 @@
       </section>
     </div>
 
+    <!-- Tab Content: Screen Emulator -->
+    <div class="tab-content" id="content-screenemulator">
+      <section class="section">
+        <div class="sectionHeader">Screen Emulator</div>
+
+        <!-- Category pills -->
+        <div class="emulator-categories">
+          <button class="emulator-cat active" data-cat="mobile">Mobile</button>
+          <button class="emulator-cat" data-cat="tablet">Tablet</button>
+          <button class="emulator-cat" data-cat="desktop">Desktop</button>
+          <button class="emulator-cat" data-cat="custom">Custom</button>
+        </div>
+
+        <!-- Device grid -->
+        <div class="emulator-grid" id="emulatorGrid"></div>
+
+        <!-- Custom size inputs -->
+        <div class="emulator-custom hidden" id="emulatorCustom">
+          <input type="number" id="emulatorW" placeholder="Width" min="240" max="3840" />
+          <span>×</span>
+          <input type="number" id="emulatorH" placeholder="Height" min="240" max="2160" />
+        </div>
+
+        <!-- Selected device info -->
+        <div class="emulator-selected" id="emulatorSelected">
+          <span id="emulatorDeviceName">Select a device above</span>
+          <span id="emulatorDimensions"></span>
+        </div>
+
+        <!-- Actions -->
+        <div class="emulator-actions">
+          <button class="emulator-rotate" id="emulatorRotate" title="Toggle Landscape / Portrait" aria-label="Rotate orientation">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+            </svg>
+          </button>
+          <button class="emulator-open-btn" id="emulatorOpenBtn" disabled>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="14" rx="2"/><path d="M7 21h10M12 17v4"/>
+            </svg>
+            Open in Window
+          </button>
+        </div>
+
+      </section>
+    </div>
+
   </main>
 
   <!-- Issues Slide-Out Panel -->
@@ -434,11 +483,27 @@
         </div>
       </button>
 
+      <!-- Screen Emulator -->
+      <button class="tool-drawer-item" data-tool="screenemulator">
+        <div class="tool-drawer-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2"/>
+            <path d="M8 21h8M12 17v4"/>
+            <rect x="7" y="7" width="6" height="10" rx="1"/>
+          </svg>
+        </div>
+        <div class="tool-drawer-label">
+          <span class="tool-drawer-name">Screen Emulator</span>
+          <span class="tool-drawer-desc">Preview at any screen size</span>
+        </div>
+      </button>
+
     </div>
   </div>
 
   <script src="tab-manager-v17.js?v=18.5"></script>
-
+  <script src="tool-drawer.js?v=19"></script>
+  <script src="screen-emulator.js?v=19"></script>
   <script src="inspector.js?v=18.5"></script>
 </body>
 </html>
