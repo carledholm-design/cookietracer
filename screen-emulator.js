@@ -213,28 +213,19 @@ class ScreenEmulator {
       openBtn.textContent = 'Opening…';
 
       try {
-        // Store launch data for the emulator view tab to read
-        await chrome.storage.local.set({
-          emulatorLaunchData: {
-            devices: this.selectedDevices.map(e => ({
-              device: e.device,
-              isLandscape: e.isLandscape
-            })),
-            url: url || 'about:blank'
-          }
+        // Tell background to inject the overlay into the pinned austedo.com tab
+        const resp = await chrome.runtime.sendMessage({
+          type: 'OPEN_EMULATOR_IN_TAB',
+          devices: this.selectedDevices.map(e => ({
+            device: e.device,
+            isLandscape: e.isLandscape
+          }))
         });
-
-        // Open the multi-device view as a new tab (to the left of the current tab)
-        const activeTabs = await chrome.tabs.query({ active: true, currentWindow: true });
-        const insertIndex = activeTabs[0]?.index ?? 0;
-
-        await chrome.tabs.create({
-          url: chrome.runtime.getURL('emulator-view.html'),
-          index: insertIndex,
-          active: true
-        });
+        if (!resp?.ok) {
+          console.error('Screen Emulator: background error —', resp?.error);
+        }
       } catch (e) {
-        console.error('Screen Emulator: failed to open view', e);
+        console.error('Screen Emulator: failed to inject overlay', e);
       }
 
       setTimeout(() => {
