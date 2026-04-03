@@ -1,4 +1,4 @@
-// Screen Emulator — opens pinned URL in a sized Chrome window
+// Screen Emulator — multi-device queue, opens pinned URL in a sized window per device
 
 const EMULATOR_DEVICES = {
   mobile: [
@@ -27,8 +27,8 @@ const EMULATOR_DEVICES = {
 class ScreenEmulator {
   constructor() {
     this.currentCategory = 'mobile';
-    this.selectedDevice = null;
-    this.isLandscape = false;
+    this.selectedDevices = []; // [{ device, isLandscape, uid }]
+    this.uidCounter = 0;
     this.customW = 0;
     this.customH = 0;
     this.init();
@@ -37,11 +37,13 @@ class ScreenEmulator {
   init() {
     this.bindCategoryPills();
     this.bindCustomInputs();
-    this.bindRotate();
     this.bindOpenBtn();
     this.renderGrid('mobile');
+    this.renderDeviceList();
     this.restoreState();
   }
+
+  // ── Category pills ──────────────────────────────────────────────────
 
   bindCategoryPills() {
     document.querySelectorAll('.emulator-cat').forEach(btn => {
@@ -49,79 +51,37 @@ class ScreenEmulator {
         document.querySelectorAll('.emulator-cat').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         this.currentCategory = btn.dataset.cat;
-        this.selectedDevice = null;
-        this.isLandscape = false;
         this.renderGrid(this.currentCategory);
-        this.updateSelectedInfo();
-        this.updateOpenBtn();
       });
     });
   }
+
+  // ── Custom size ─────────────────────────────────────────────────────
 
   bindCustomInputs() {
     const wInput = document.getElementById('emulatorW');
     const hInput = document.getElementById('emulatorH');
     if (!wInput || !hInput) return;
 
-    const onChange = () => {
-      this.customW = parseInt(wInput.value) || 0;
-      this.customH = parseInt(hInput.value) || 0;
-      if (this.customW > 0 && this.customH > 0) {
-        this.selectedDevice = { name: 'Custom', w: this.customW, h: this.customH };
-        this.updateSelectedInfo();
-        this.updateOpenBtn();
+    const onAdd = () => {
+      const w = parseInt(wInput.value) || 0;
+      const h = parseInt(hInput.value) || 0;
+      if (w >= 240 && h >= 240) {
+        this.addDevice({ name: `Custom ${w}×${h}`, w, h });
       }
     };
-    wInput.addEventListener('input', onChange);
-    hInput.addEventListener('input', onChange);
-  }
 
-  bindRotate() {
-    const rotateBtn = document.getElementById('emulatorRotate');
-    if (!rotateBtn) return;
-    rotateBtn.addEventListener('click', () => {
-      if (!this.selectedDevice) return;
-      this.isLandscape = !this.isLandscape;
-      rotateBtn.classList.toggle('rotated', this.isLandscape);
-      this.updateSelectedInfo();
+    // Add on Enter in either field
+    [wInput, hInput].forEach(el => {
+      el.addEventListener('keydown', e => { if (e.key === 'Enter') onAdd(); });
     });
+
+    // Custom add button
+    const addCustomBtn = document.getElementById('emulatorCustomAdd');
+    if (addCustomBtn) addCustomBtn.addEventListener('click', onAdd);
   }
 
-  bindOpenBtn() {
-    const openBtn = document.getElementById('emulatorOpenBtn');
-    if (!openBtn) return;
-    openBtn.addEventListener('click', async () => {
-      if (!this.selectedDevice) return;
-      const url = await this.getPinnedUrl();
-      const w = this.isLandscape ? this.selectedDevice.h : this.selectedDevice.w;
-      const h = this.isLandscape ? this.selectedDevice.w : this.selectedDevice.h;
-
-      const originalHTML = openBtn.innerHTML;
-      openBtn.disabled = true;
-      openBtn.textContent = 'Opening...';
-
-      try {
-        await chrome.windows.create({ url: url || 'about:blank', width: w, height: h, type: 'popup' });
-      } catch (e) {
-        console.error('Screen Emulator: failed to open window', e);
-      }
-
-      setTimeout(() => {
-        openBtn.innerHTML = originalHTML;
-        openBtn.disabled = false;
-        this.updateOpenBtn();
-      }, 800);
-    });
-  }
-
-  async getPinnedUrl() {
-    try {
-      const resp = await chrome.runtime.sendMessage({ type: 'GET_TRACKED' });
-      return resp?.trackedUrl || null;
-    } catch {
-      return null;
-    }
-  }
+  // ── Device grid ─────────────────────────────────────────────────────
 
   renderGrid(category) {
     const grid = document.getElementById('emulatorGrid');
@@ -138,11 +98,10 @@ class ScreenEmulator {
     const devices = EMULATOR_DEVICES[category] || [];
     grid.innerHTML = '';
 
-    devices.forEach((device, i) => {
+    devices.forEach(device => {
       const card = document.createElement('button');
       card.className = 'emulator-card';
-      card.dataset.index = i;
-      card.dataset.cat = category;
+      card.dataset.name = device.name;
 
       card.innerHTML = `
         <div class="emulator-card-screen" style="aspect-ratio: ${device.w}/${device.h}">
@@ -150,59 +109,163 @@ class ScreenEmulator {
         </div>
         <div class="emulator-card-name">${device.name}</div>
         <div class="emulator-card-dims">${device.w} × ${device.h}</div>
+        <div class="emulator-card-add-icon">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+        </div>
       `;
 
       card.addEventListener('click', () => {
-        grid.querySelectorAll('.emulator-card').forEach(c => c.classList.remove('active'));
-        card.classList.add('active');
-        this.selectedDevice = device;
-        this.isLandscape = false;
-        const rotateBtn = document.getElementById('emulatorRotate');
-        if (rotateBtn) rotateBtn.classList.remove('rotated');
-        this.updateSelectedInfo();
-        this.updateOpenBtn();
-        this.saveState();
+        this.addDevice(device);
+        card.classList.add('pulse');
+        setTimeout(() => card.classList.remove('pulse'), 400);
       });
 
       grid.appendChild(card);
     });
   }
 
-  updateSelectedInfo() {
-    const nameEl = document.getElementById('emulatorDeviceName');
-    const dimsEl = document.getElementById('emulatorDimensions');
-    const selectedBar = document.getElementById('emulatorSelected');
+  // ── Device list management ──────────────────────────────────────────
 
-    if (!this.selectedDevice) {
-      if (nameEl) nameEl.textContent = 'No device selected';
-      if (dimsEl) dimsEl.textContent = '';
-      if (selectedBar) selectedBar.classList.remove('has-device');
+  addDevice(device) {
+    const uid = ++this.uidCounter;
+    this.selectedDevices.push({ device, isLandscape: false, uid });
+    this.renderDeviceList();
+    this.updateOpenBtn();
+    this.saveState();
+  }
+
+  removeDevice(uid) {
+    this.selectedDevices = this.selectedDevices.filter(d => d.uid !== uid);
+    this.renderDeviceList();
+    this.updateOpenBtn();
+    this.saveState();
+  }
+
+  toggleRotation(uid) {
+    const entry = this.selectedDevices.find(d => d.uid === uid);
+    if (!entry) return;
+    entry.isLandscape = !entry.isLandscape;
+    this.renderDeviceList();
+    this.saveState();
+  }
+
+  renderDeviceList() {
+    const list = document.getElementById('emulatorDeviceList');
+    if (!list) return;
+
+    if (this.selectedDevices.length === 0) {
+      list.innerHTML = '<div class="emulator-list-empty">Tap a device above to add it</div>';
       return;
     }
 
-    const w = this.isLandscape ? this.selectedDevice.h : this.selectedDevice.w;
-    const h = this.isLandscape ? this.selectedDevice.w : this.selectedDevice.h;
-    if (nameEl) nameEl.textContent = this.selectedDevice.name + (this.isLandscape ? ' (Landscape)' : '');
-    if (dimsEl) dimsEl.textContent = `${w} × ${h} px`;
-    if (selectedBar) selectedBar.classList.add('has-device');
+    list.innerHTML = '';
+
+    this.selectedDevices.forEach(entry => {
+      const { device, isLandscape, uid } = entry;
+      const w = isLandscape ? device.h : device.w;
+      const h = isLandscape ? device.w : device.h;
+
+      const item = document.createElement('div');
+      item.className = 'emulator-device-item';
+
+      item.innerHTML = `
+        <div class="emulator-item-thumb" style="aspect-ratio: ${w}/${h}">
+          <div class="emulator-card-screen-inner"></div>
+        </div>
+        <div class="emulator-item-info">
+          <span class="emulator-item-name">${device.name}</span>
+          <span class="emulator-item-dims">${w} × ${h} px${isLandscape ? ' · ⟳' : ''}</span>
+        </div>
+        <button class="emulator-item-rotate${isLandscape ? ' rotated' : ''}" title="Toggle Landscape / Portrait" aria-label="Rotate">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+          </svg>
+        </button>
+        <button class="emulator-item-remove" aria-label="Remove ${device.name}">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      `;
+
+      item.querySelector('.emulator-item-rotate').addEventListener('click', () => this.toggleRotation(uid));
+      item.querySelector('.emulator-item-remove').addEventListener('click', () => this.removeDevice(uid));
+
+      list.appendChild(item);
+    });
+  }
+
+  // ── Open button ─────────────────────────────────────────────────────
+
+  bindOpenBtn() {
+    const openBtn = document.getElementById('emulatorOpenBtn');
+    if (!openBtn) return;
+
+    openBtn.addEventListener('click', async () => {
+      if (this.selectedDevices.length === 0) return;
+      const url = await this.getPinnedUrl();
+
+      const originalHTML = openBtn.innerHTML;
+      openBtn.disabled = true;
+      openBtn.textContent = 'Opening...';
+
+      try {
+        for (const entry of this.selectedDevices) {
+          const { device, isLandscape } = entry;
+          const w = isLandscape ? device.h : device.w;
+          const h = isLandscape ? device.w : device.h;
+          await chrome.windows.create({ url: url || 'about:blank', width: w, height: h, type: 'popup' });
+        }
+      } catch (e) {
+        console.error('Screen Emulator: failed to open window', e);
+      }
+
+      setTimeout(() => {
+        openBtn.innerHTML = originalHTML;
+        openBtn.disabled = false;
+        this.updateOpenBtn();
+      }, 800);
+    });
   }
 
   updateOpenBtn() {
     const openBtn = document.getElementById('emulatorOpenBtn');
     if (!openBtn) return;
-    openBtn.disabled = !this.selectedDevice;
+    openBtn.disabled = this.selectedDevices.length === 0;
+
+    const countEl = document.getElementById('emulatorOpenCount');
+    if (countEl) {
+      if (this.selectedDevices.length > 1) {
+        countEl.textContent = ` (${this.selectedDevices.length})`;
+        countEl.style.display = '';
+      } else {
+        countEl.style.display = 'none';
+      }
+    }
   }
+
+  async getPinnedUrl() {
+    try {
+      const resp = await chrome.runtime.sendMessage({ type: 'GET_TRACKED' });
+      return resp?.trackedUrl || null;
+    } catch {
+      return null;
+    }
+  }
+
+  // ── Persistence ─────────────────────────────────────────────────────
 
   saveState() {
     try {
-      if (this.selectedDevice) {
-        chrome.storage.local.set({
-          emulatorState: {
-            category: this.currentCategory,
-            device: this.selectedDevice
-          }
-        });
-      }
+      chrome.storage.local.set({
+        emulatorState: {
+          category: this.currentCategory,
+          devices: this.selectedDevices.map(e => ({ device: e.device, isLandscape: e.isLandscape }))
+        }
+      });
     } catch (e) {}
   }
 
@@ -215,16 +278,13 @@ class ScreenEmulator {
         const catBtn = document.querySelector(`.emulator-cat[data-cat="${saved.category}"]`);
         if (catBtn) catBtn.click();
 
-        if (saved.device && saved.category !== 'custom') {
-          const grid = document.getElementById('emulatorGrid');
-          const devices = EMULATOR_DEVICES[saved.category] || [];
-          const idx = devices.findIndex(d => d.name === saved.device.name);
-          if (idx >= 0 && grid) {
-            setTimeout(() => {
-              const cards = grid.querySelectorAll('.emulator-card');
-              if (cards[idx]) cards[idx].click();
-            }, 50);
-          }
+        if (Array.isArray(saved.devices)) {
+          saved.devices.forEach(entry => {
+            const uid = ++this.uidCounter;
+            this.selectedDevices.push({ device: entry.device, isLandscape: entry.isLandscape, uid });
+          });
+          this.renderDeviceList();
+          this.updateOpenBtn();
         }
       });
     } catch (e) {}
