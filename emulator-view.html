@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="color-scheme" content="light dark">
+  <title>Screen Emulator — Cookie Tracer+</title>
+  <link rel="stylesheet" href="css/md3-tokens.css" />
+  <link rel="stylesheet" href="css/emulator-view.css" />
+</head>
+<body>
+
+  <header class="ev-header">
+    <div class="ev-brand">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+        <rect x="7" y="7" width="6" height="10" rx="1"/>
+      </svg>
+      <span class="ev-brand-name">Screen Emulator</span>
+      <span class="ev-brand-version">Cookie Tracer+ v<span id="evVersion"></span></span>
+    </div>
+
+    <div class="ev-url-bar">
+      <span class="ev-url-label">URL</span>
+      <input class="ev-url-input" id="evUrlInput" type="text" placeholder="Loading..." spellcheck="false" />
+      <button class="ev-url-go" id="evUrlGo" title="Navigate all frames">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="ev-controls">
+      <button class="ev-toggle active" id="evSyncScroll" aria-pressed="true" title="Sync scroll position across all frames">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 3l4 4-4 4"/><path d="M21 7H9a4 4 0 0 0-4 4v1"/>
+          <path d="M7 21l-4-4 4-4"/><path d="M3 17h12a4 4 0 0 0 4-4v-1"/>
+        </svg>
+        Sync Scroll
+      </button>
+      <button class="ev-toggle active" id="evSyncNav" aria-pressed="true" title="Sync navigation across all frames">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+        </svg>
+        Sync Nav
+      </button>
+      <div class="ev-sep"></div>
+      <button class="ev-close-btn" id="evClose">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+        Close
+      </button>
+    </div>
+  </header>
+
+  <div class="ev-stage" id="evStage">
+    <div class="ev-loading" id="evLoading">Loading devices…</div>
+  </div>
+
+  <script src="emulator-view.js"></script>
+</body>
+</html>
