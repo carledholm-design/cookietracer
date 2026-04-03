@@ -3,6 +3,12 @@
 
 'use strict';
 
+// Guard: safe to inject multiple times — only init once per page
+if (window.__ctEmuOverlayInit) {
+  // Already registered — nothing to do
+} else {
+window.__ctEmuOverlayInit = true;
+
 let overlayHost = null;
 let overlayIframes = [];
 let syncScroll = true;
@@ -251,3 +257,5 @@ const CSS = `
 .stage::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.22);border-radius:5px;border:2px solid #0d1117}
 .stage::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.4)}
 `;
+
+} // end guard block
