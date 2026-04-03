@@ -385,6 +385,24 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         sendResponse({ ok: true, ...data }); 
         return;
       }
+      if (msg?.type === "OPEN_EMULATOR_IN_TAB") {
+        const data = await chrome.storage.session.get(["trackedTabId","trackedWindowId","trackedUrl"]);
+        const tabId = data?.trackedTabId;
+        if (!tabId) { sendResponse({ ok: false, error: "No pinned tab" }); return; }
+        // Focus the pinned tab so user sees it take over
+        if (data.trackedWindowId) {
+          try { await chrome.windows.update(data.trackedWindowId, { focused: true }); } catch {}
+        }
+        await chrome.tabs.update(tabId, { active: true });
+        // Inject the overlay into the pinned tab
+        await chrome.tabs.sendMessage(tabId, {
+          type: "SHOW_EMULATOR",
+          devices: msg.devices,
+          url: data.trackedUrl || ""
+        });
+        sendResponse({ ok: true });
+        return;
+      }
       if (msg?.type === "DIAG_PING") {
         sendResponse({ ok: true, version: chrome.runtime.getManifest().version });
         return;
