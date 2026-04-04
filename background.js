@@ -414,6 +414,15 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         sendResponse({ ok: true });
         return;
       }
+      if (msg?.type === "CLOSE_EMULATOR_IN_TAB") {
+        const data = await chrome.storage.session.get(["trackedTabId"]);
+        const tabId = data?.trackedTabId;
+        if (tabId) {
+          try { await chrome.tabs.sendMessage(tabId, { type: "HIDE_EMULATOR" }); } catch {}
+        }
+        sendResponse({ ok: true });
+        return;
+      }
       if (msg?.type === "DIAG_PING") {
         sendResponse({ ok: true, version: chrome.runtime.getManifest().version });
         return;
