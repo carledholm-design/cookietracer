@@ -317,6 +317,48 @@
   color: var(--md-sys-color-error);
 }
 
+/* ─── Drag handle ─────────────────────────────────────────────────────── */
+
+.emulator-drag-handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 26px;
+  flex-shrink: 0;
+  cursor: grab;
+  color: transparent;
+  border: none;
+  background: transparent;
+  padding: 0;
+  border-radius: 4px;
+  transition: color 0.15s;
+}
+
+.emulator-device-item:hover .emulator-drag-handle {
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.emulator-drag-handle:active {
+  cursor: grabbing;
+  color: var(--md-sys-color-primary);
+}
+
+/* Dragging state */
+.emulator-device-item.dragging {
+  opacity: 0.35;
+  background: var(--md-sys-color-surface-container-highest);
+}
+
+/* Drop zone indicators */
+.emulator-device-item.drag-above {
+  border-top: 2px solid var(--md-sys-color-primary) !important;
+}
+
+.emulator-device-item.drag-below {
+  border-bottom: 2px solid var(--md-sys-color-primary) !important;
+}
+
 /* Action row */
 .emulator-actions {
   display: flex;
@@ -349,6 +391,37 @@
 
 .emulator-open-btn:not(:disabled):hover {
   opacity: 0.88;
+}
+
+/* Close Emulator button */
+.emulator-close-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 8px;
+  border: 1.5px solid var(--md-sys-color-outline-variant);
+  background: transparent;
+  color: var(--md-sys-color-on-surface-variant);
+  font: var(--md-sys-typescale-label-large);
+  font-family: inherit;
+  cursor: pointer;
+  flex-shrink: 0;
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.emulator-close-btn:not(:disabled):hover {
+  background: color-mix(in srgb, var(--md-sys-color-error) 10%, transparent);
+  color: var(--md-sys-color-error);
+  border-color: var(--md-sys-color-error);
+}
+
+.emulator-close-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
 }
 
 /* ─── Tool Drawer ─────────────────────────────────────────────────────── */
