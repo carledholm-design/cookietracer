@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="css/tables.css?v=18.5" />
   <link rel="stylesheet" href="css/modals.css?v=18.5" />
   <link rel="stylesheet" href="css/emulator.css?v=19" />
+  <link rel="stylesheet" href="css/contrast.css?v=19.3" />
 </head>
 
 <body>
@@ -393,6 +394,129 @@
       </section>
     </div>
 
+    <!-- Tab Content: Contrast Checker -->
+    <div class="tab-content" id="content-contrastchecker">
+      <section class="section">
+        <div class="sectionHeader">Color Contrast Checker</div>
+
+        <!-- Color inputs -->
+        <div class="cc-inputs">
+          <div class="cc-color-block">
+            <div class="cc-color-label">Foreground</div>
+            <div class="cc-color-row">
+              <input type="color" class="cc-color-inp" id="ccFgPicker" value="#000000" title="Choose foreground color" />
+              <input class="cc-hex-inp" type="text" id="ccFgHex" value="#000000" maxlength="7" spellcheck="false" aria-label="Foreground hex color" />
+            </div>
+          </div>
+
+          <button class="cc-swap-btn" id="ccSwap" title="Swap foreground and background" aria-label="Swap colors">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M7 16V4m0 0L3 8m4-4l4 4"/>
+              <path d="M17 8v12m0 0l4-4m-4 4l-4-4"/>
+            </svg>
+          </button>
+
+          <div class="cc-color-block">
+            <div class="cc-color-label">Background</div>
+            <div class="cc-color-row">
+              <input type="color" class="cc-color-inp" id="ccBgPicker" value="#ffffff" title="Choose background color" />
+              <input class="cc-hex-inp" type="text" id="ccBgHex" value="#ffffff" maxlength="7" spellcheck="false" aria-label="Background hex color" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Live preview -->
+        <div class="cc-preview">
+          <div class="cc-preview-label">Preview</div>
+          <div class="cc-preview-inner" id="ccPreviewInner">
+            <p class="cc-p-normal">Normal text — 16px regular weight</p>
+            <p class="cc-p-large">Large text — 22px</p>
+            <p class="cc-p-bold">Bold large — 14px bold</p>
+            <div class="cc-p-ui">
+              <span class="cc-ui-btn" id="ccUiBtn">UI Button</span>
+              <span class="cc-ui-icon" id="ccUiIcon">&#9632;</span>
+              <span class="cc-ui-label">Graphical elements</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contrast ratio -->
+        <div class="cc-ratio-card" id="ccRatioCard">
+          <div class="cc-ratio-main">
+            <span class="cc-ratio-num" id="ccRatioNum">21.00<span class="cc-ratio-colon">:1</span></span>
+            <span class="cc-ratio-badge cc-badge--aaa" id="ccRatioBadge">AAA</span>
+          </div>
+          <div class="cc-ratio-label">Contrast Ratio</div>
+          <div class="cc-lum-row">
+            <span class="cc-lum-item">FG&nbsp;<strong id="ccFgLum">0.0000</strong></span>
+            <span class="cc-lum-sep">·</span>
+            <span class="cc-lum-item">BG&nbsp;<strong id="ccBgLum">1.0000</strong></span>
+            <span class="cc-lum-note">relative luminance</span>
+          </div>
+        </div>
+
+        <!-- WCAG results -->
+        <div class="cc-wcag">
+          <div class="cc-wcag-title">WCAG 2.1 Compliance</div>
+          <div class="cc-wcag-grid">
+
+            <div class="cc-wcag-card" id="wcagAaNormal">
+              <div class="cc-wcag-level">AA</div>
+              <div class="cc-wcag-type">Normal Text</div>
+              <div class="cc-wcag-thresh">Ratio ≥ 4.5:1</div>
+              <div class="cc-wcag-footer">
+                <span class="cc-wcag-icon" id="wcagAaNormalIcon"></span>
+                <span class="cc-wcag-verdict" id="wcagAaNormalV">—</span>
+              </div>
+            </div>
+
+            <div class="cc-wcag-card" id="wcagAaLarge">
+              <div class="cc-wcag-level">AA</div>
+              <div class="cc-wcag-type">Large Text</div>
+              <div class="cc-wcag-thresh">Ratio ≥ 3:1</div>
+              <div class="cc-wcag-footer">
+                <span class="cc-wcag-icon" id="wcagAaLargeIcon"></span>
+                <span class="cc-wcag-verdict" id="wcagAaLargeV">—</span>
+              </div>
+            </div>
+
+            <div class="cc-wcag-card" id="wcagAaaNormal">
+              <div class="cc-wcag-level">AAA</div>
+              <div class="cc-wcag-type">Normal Text</div>
+              <div class="cc-wcag-thresh">Ratio ≥ 7:1</div>
+              <div class="cc-wcag-footer">
+                <span class="cc-wcag-icon" id="wcagAaaNormalIcon"></span>
+                <span class="cc-wcag-verdict" id="wcagAaaNormalV">—</span>
+              </div>
+            </div>
+
+            <div class="cc-wcag-card" id="wcagAaaLarge">
+              <div class="cc-wcag-level">AAA</div>
+              <div class="cc-wcag-type">Large Text</div>
+              <div class="cc-wcag-thresh">Ratio ≥ 4.5:1</div>
+              <div class="cc-wcag-footer">
+                <span class="cc-wcag-icon" id="wcagAaaLargeIcon"></span>
+                <span class="cc-wcag-verdict" id="wcagAaaLargeV">—</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- UI components — full width row -->
+          <div class="cc-wcag-card cc-wcag-card--wide" id="wcagUi">
+            <div class="cc-wcag-level">AA</div>
+            <div class="cc-wcag-type">UI Components &amp; Graphics</div>
+            <div class="cc-wcag-thresh">Ratio ≥ 3:1</div>
+            <div class="cc-wcag-footer">
+              <span class="cc-wcag-icon" id="wcagUiIcon"></span>
+              <span class="cc-wcag-verdict" id="wcagUiV">—</span>
+            </div>
+          </div>
+        </div>
+
+      </section>
+    </div>
+
   </main>
 
   <!-- Issues Slide-Out Panel -->
@@ -465,8 +589,9 @@
   </div>
 
   <script src="tab-manager-v17.js?v=18.5"></script>
-  <script src="tool-drawer.js?v=19"></script>
-  <script src="screen-emulator.js?v=19"></script>
+  <script src="tool-drawer.js?v=19.3"></script>
+  <script src="screen-emulator.js?v=19.2"></script>
+  <script src="contrast-checker.js?v=19.3"></script>
   <script src="inspector.js?v=18.5"></script>
 </body>
 </html>
