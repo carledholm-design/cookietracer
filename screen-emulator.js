@@ -31,6 +31,7 @@ class ScreenEmulator {
     this.uidCounter = 0;
     this.customW = 0;
     this.customH = 0;
+    this.overlayActive = false;
     this.init();
   }
 
@@ -38,6 +39,7 @@ class ScreenEmulator {
     this.bindCategoryPills();
     this.bindCustomInputs();
     this.bindOpenBtn();
+    this.bindCloseBtn();
     this.renderGrid('mobile');
     this.renderDeviceList();
     this.restoreState();
@@ -169,8 +171,17 @@ class ScreenEmulator {
 
       const item = document.createElement('div');
       item.className = 'emulator-device-item';
+      item.setAttribute('draggable', 'true');
+      item.dataset.uid = uid;
 
       item.innerHTML = `
+        <button class="emulator-drag-handle" title="Drag to reorder" aria-label="Reorder">
+          <svg width="10" height="14" viewBox="0 0 10 14" fill="currentColor">
+            <circle cx="2" cy="2" r="1.5"/><circle cx="8" cy="2" r="1.5"/>
+            <circle cx="2" cy="7" r="1.5"/><circle cx="8" cy="7" r="1.5"/>
+            <circle cx="2" cy="12" r="1.5"/><circle cx="8" cy="12" r="1.5"/>
+          </svg>
+        </button>
         <div class="emulator-item-thumb" style="aspect-ratio: ${w}/${h}">
           <div class="emulator-card-screen-inner"></div>
         </div>
@@ -193,6 +204,62 @@ class ScreenEmulator {
 
       item.querySelector('.emulator-item-rotate').addEventListener('click', () => this.toggleRotation(uid));
       item.querySelector('.emulator-item-remove').addEventListener('click', () => this.removeDevice(uid));
+
+      // ── Drag-and-drop reorder ───────────────────────────────────────
+
+      item.addEventListener('dragstart', (e) => {
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', String(uid));
+        // Delay class add so the ghost image captures clean row first
+        setTimeout(() => item.classList.add('dragging'), 0);
+      });
+
+      item.addEventListener('dragend', () => {
+        item.classList.remove('dragging');
+        list.querySelectorAll('.emulator-device-item').forEach(el => {
+          el.classList.remove('drag-above', 'drag-below');
+        });
+      });
+
+      item.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        list.querySelectorAll('.emulator-device-item').forEach(el => {
+          el.classList.remove('drag-above', 'drag-below');
+        });
+        const rect = item.getBoundingClientRect();
+        item.classList.add(e.clientY < rect.top + rect.height / 2 ? 'drag-above' : 'drag-below');
+      });
+
+      item.addEventListener('dragleave', (e) => {
+        if (!item.contains(e.relatedTarget)) {
+          item.classList.remove('drag-above', 'drag-below');
+        }
+      });
+
+      item.addEventListener('drop', (e) => {
+        e.preventDefault();
+        item.classList.remove('drag-above', 'drag-below');
+
+        const srcUid = parseInt(e.dataTransfer.getData('text/plain'));
+        if (srcUid === uid) return;
+
+        const srcIdx = this.selectedDevices.findIndex(d => d.uid === srcUid);
+        const tgtIdx = this.selectedDevices.findIndex(d => d.uid === uid);
+        if (srcIdx === -1 || tgtIdx === -1) return;
+
+        // Determine insert position: above or below midpoint
+        const rect = item.getBoundingClientRect();
+        const insertAfter = e.clientY >= rect.top + rect.height / 2;
+
+        const [moved] = this.selectedDevices.splice(srcIdx, 1);
+        // Recalculate target index after splice
+        const newTgt = this.selectedDevices.findIndex(d => d.uid === uid);
+        this.selectedDevices.splice(insertAfter ? newTgt + 1 : newTgt, 0, moved);
+
+        this.renderDeviceList();
+        this.saveState();
+      });
 
       list.appendChild(item);
     });
@@ -221,7 +288,9 @@ class ScreenEmulator {
             isLandscape: e.isLandscape
           }))
         });
-        if (!resp?.ok) {
+        if (resp?.ok) {
+          this.overlayActive = true;
+        } else {
           console.error('Screen Emulator: background error —', resp?.error);
         }
       } catch (e) {
@@ -230,10 +299,42 @@ class ScreenEmulator {
 
       setTimeout(() => {
         openBtn.innerHTML = originalHTML;
-        openBtn.disabled = false;
-        this.updateOpenBtn();
+        this.updateActionButtons();
       }, 800);
     });
+  }
+
+  // ── Close button ─────────────────────────────────────────────────────
+
+  bindCloseBtn() {
+    const closeBtn = document.getElementById('emulatorCloseBtn');
+    if (!closeBtn) return;
+
+    closeBtn.addEventListener('click', async () => {
+      const originalHTML = closeBtn.innerHTML;
+      closeBtn.disabled = true;
+      closeBtn.textContent = 'Closing…';
+
+      try {
+        await chrome.runtime.sendMessage({ type: 'CLOSE_EMULATOR_IN_TAB' });
+      } catch (e) {
+        console.error('Screen Emulator: failed to close overlay', e);
+      }
+
+      this.overlayActive = false;
+      setTimeout(() => {
+        closeBtn.innerHTML = originalHTML;
+        this.updateActionButtons();
+      }, 400);
+    });
+  }
+
+  // ── Action button state ───────────────────────────────────────────────
+
+  updateActionButtons() {
+    const closeBtn = document.getElementById('emulatorCloseBtn');
+    if (closeBtn) closeBtn.disabled = !this.overlayActive;
+    this.updateOpenBtn();
   }
 
   updateOpenBtn() {
