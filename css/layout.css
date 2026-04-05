@@ -481,6 +481,7 @@
 .bottombar-logos {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 14px;
   padding: 7px 14px;
 }
