@@ -132,9 +132,9 @@ function cc2RenderPage(ops) {
     setStatus('');
     if (resultsEl) resultsEl.classList.add('hidden');
 
-    // Get active tab
+    // Get active tab in the last focused browser window (not the inspector window)
     const tab = await new Promise(resolve => {
-      chrome.tabs.query({ active: true, currentWindow: true }, tabs => resolve(tabs?.[0] || null));
+      chrome.tabs.query({ active: true, lastFocusedWindow: true }, tabs => resolve(tabs?.[0] || null));
     });
     if (!tab?.id) {
       setStatus('Could not detect the active tab.', 'warn');
