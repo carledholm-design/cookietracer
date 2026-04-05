@@ -517,38 +517,6 @@
       </section>
     </div>
 
-    <!-- Tab Content: Copy Compare -->
-    <div class="tab-content" id="content-copycompare">
-      <section class="section">
-        <div class="sectionHeader">Copy Compare</div>
-        <div class="cc2-intro">Paste the approved copy from your MLR document, then compare it word-for-word against the live page.</div>
-        <div class="cc2-paste-wrap">
-          <label class="cc2-paste-label" for="cc2ApprovedText">Approved Copy</label>
-          <textarea class="cc2-textarea" id="cc2ApprovedText" placeholder="Paste approved copy here…" rows="7" spellcheck="false"></textarea>
-        </div>
-        <div class="cc2-actions">
-          <button class="cc2-compare-btn" id="cc2CompareBtn">Compare with Page</button>
-          <button class="cc2-clear-btn" id="cc2ClearBtn">Clear</button>
-        </div>
-        <div class="cc2-status" id="cc2Status"></div>
-        <div class="cc2-results hidden" id="cc2Results">
-          <div class="cc2-summary" id="cc2Summary"></div>
-          <div class="cc2-legend">
-            <span class="cc2-legend-item"><mark class="cc2-miss">word</mark> Missing from page</span>
-            <span class="cc2-legend-item"><mark class="cc2-extra">word</mark> Not in approved</span>
-          </div>
-          <div class="cc2-result-section">
-            <div class="cc2-result-label">Approved Copy</div>
-            <div class="cc2-text-view" id="cc2ApprovedView"></div>
-          </div>
-          <div class="cc2-result-section">
-            <div class="cc2-result-label">Page Text</div>
-            <div class="cc2-text-view" id="cc2PageView"></div>
-          </div>
-        </div>
-      </section>
-    </div>
-
     <!-- Tab Content: Reading Level -->
     <div class="tab-content" id="content-readinglevel">
       <section class="section">
@@ -592,88 +560,6 @@
           </div>
           <div class="rl-pharma-note hidden" id="rlPharmaNote"></div>
         </div>
-      </section>
-    </div>
-
-    <!-- Tab Content: Staging vs. Prod -->
-    <div class="tab-content" id="content-stagingcompare">
-      <section class="section">
-        <div class="sectionHeader">Staging vs. Prod</div>
-
-        <!-- Active session banner -->
-        <div class="sc-active-bar hidden" id="scActiveBar">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-          </svg>
-          Comparison session running
-        </div>
-
-        <!-- URL inputs -->
-        <div class="sc-fields">
-          <div class="sc-field">
-            <label class="sc-label" for="scProdUrl">Production URL</label>
-            <input class="sc-input" type="url" id="scProdUrl" placeholder="https://www.austedo.com/…" />
-          </div>
-          <div class="sc-swap-row">
-            <button class="sc-swap-btn" id="scSwapBtn" title="Swap URLs" aria-label="Swap URLs">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M7 16V4m0 0L3 8m4-4l4 4"/><path d="M17 8v12m0 0l4-4m-4 4l-4-4"/>
-              </svg>
-            </button>
-            <button class="sc-auto-btn" id="scAutoDetect">Use pinned URL</button>
-          </div>
-          <div class="sc-field">
-            <label class="sc-label" for="scStagingUrl">Staging / UAT URL</label>
-            <input class="sc-input" type="url" id="scStagingUrl" placeholder="https://uat.austedo.com/…" />
-          </div>
-        </div>
-
-        <!-- Mode selector -->
-        <div class="sc-section-label">View Mode</div>
-        <div class="sc-mode-pills">
-          <button class="sc-mode-pill active" id="scModeDesktop">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
-            </svg>
-            Desktop
-          </button>
-          <button class="sc-mode-pill" id="scModeMobile">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="7" y="2" width="10" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>
-            </svg>
-            Mobile
-          </button>
-        </div>
-
-        <!-- Sync options -->
-        <div class="sc-section-label">Sync Options</div>
-        <div class="sc-sync-opts">
-          <label class="sc-sync-row">
-            <span class="sc-sync-label">Sync Scroll</span>
-            <input type="checkbox" class="sc-toggle" id="scSyncScroll" checked />
-          </label>
-          <label class="sc-sync-row">
-            <span class="sc-sync-label">Sync Navigation</span>
-            <input type="checkbox" class="sc-toggle" id="scSyncNav" checked />
-          </label>
-        </div>
-
-        <div class="sc-status" id="scStatus"></div>
-
-        <!-- Action buttons -->
-        <button class="sc-open-btn" id="scOpenBtn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="2" y="3" width="9" height="18" rx="1"/><rect x="13" y="3" width="9" height="18" rx="1"/>
-          </svg>
-          Open Comparison
-        </button>
-        <button class="sc-close-btn" id="scCloseBtn" style="display:none">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-          </svg>
-          Close Comparison
-        </button>
-
       </section>
     </div>
 
@@ -730,23 +616,6 @@
     </div>
     <div class="tool-drawer-list" id="toolDrawerList">
 
-      <!-- Copy Compare -->
-      <button class="tool-drawer-item" data-tool="copycompare">
-        <div class="tool-drawer-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-            <polyline points="14 2 14 8 20 8"/>
-            <line x1="16" y1="13" x2="8" y2="13"/>
-            <line x1="16" y1="17" x2="8" y2="17"/>
-            <polyline points="10 9 9 9 8 9"/>
-          </svg>
-        </div>
-        <div class="tool-drawer-label">
-          <span class="tool-drawer-name">Copy Compare</span>
-          <span class="tool-drawer-desc">Word-for-word review against approved copy</span>
-        </div>
-      </button>
-
       <!-- Reading Level -->
       <button class="tool-drawer-item" data-tool="readinglevel">
         <div class="tool-drawer-icon">
@@ -758,20 +627,6 @@
         <div class="tool-drawer-label">
           <span class="tool-drawer-name">Reading Level</span>
           <span class="tool-drawer-desc">Flesch-Kincaid grade level analyzer</span>
-        </div>
-      </button>
-
-      <!-- Staging vs Prod -->
-      <button class="tool-drawer-item" data-tool="stagingcompare">
-        <div class="tool-drawer-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="2" y="3" width="9" height="18" rx="1.5"/>
-            <rect x="13" y="3" width="9" height="18" rx="1.5"/>
-          </svg>
-        </div>
-        <div class="tool-drawer-label">
-          <span class="tool-drawer-name">Staging vs. Prod</span>
-          <span class="tool-drawer-desc">Open two URLs side by side</span>
         </div>
       </button>
 
@@ -797,9 +652,7 @@
   <script src="tool-drawer.js?v=19.7"></script>
   <script src="screen-emulator.js?v=19.7"></script>
   <script src="contrast-checker.js?v=19.7"></script>
-  <script src="copy-compare.js?v=19.7"></script>
   <script src="reading-level.js?v=19.7"></script>
-  <script src="staging-compare.js?v=19.7"></script>
   <script src="inspector.js?v=19.7"></script>
 </body>
 </html>
