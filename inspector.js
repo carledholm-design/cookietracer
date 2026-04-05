@@ -1645,10 +1645,150 @@ function syncJourneyDropdowns(cookies) {
           addRow('td', tdCook ? 'pass' : 'warn', 'TD cookie: ' + tdVal, tdCook ? tdCook.name : '');
           lines.push('HD cookie: ' + hdVal);
           lines.push('TD cookie: ' + tdVal);
+
+          addSeparator('quality');
+
+          // 8. Cookie security flags on journey cookies
+          const journeyCookies = [hdCook, tdCook].filter(Boolean);
+          if (journeyCookies.length > 0) {
+            const flagIssues = [];
+            journeyCookies.forEach(function(c) {
+              if (!c.secure)   flagIssues.push(c.name + ': not Secure');
+              if (!c.httpOnly) flagIssues.push(c.name + ': not HttpOnly');
+            });
+            if (flagIssues.length === 0) {
+              addRow('flags', 'pass', 'Journey cookie flags OK', 'Secure + HttpOnly confirmed');
+              lines.push('✔ Journey cookie flags OK');
+            } else {
+              addRow('flags', 'warn', 'Cookie flag issues', flagIssues.join(' · '));
+              lines.push('⚠ Cookie flag issues: ' + flagIssues.join(', '));
+            }
+
+            // 9. SameSite check
+            const sameIssues = journeyCookies.filter(function(c) {
+              return !c.sameSite || c.sameSite === 'unspecified' || c.sameSite === 'no_restriction';
+            });
+            if (sameIssues.length === 0) {
+              addRow('samesite', 'pass', 'SameSite set on journey cookies', '');
+              lines.push('✔ SameSite OK');
+            } else {
+              addRow('samesite', 'warn', 'SameSite not set',
+                sameIssues.map(function(c) { return c.name; }).join(', ') + ' — may break in cross-site context');
+              lines.push('⚠ SameSite not set on: ' + sameIssues.map(function(c) { return c.name; }).join(', '));
+            }
+
+            // 10. Expiry check — warn if cookie expires within 60 minutes
+            const nowSec = Date.now() / 1000;
+            const expiring = journeyCookies.filter(function(c) {
+              return c.expirationDate && (c.expirationDate - nowSec) < 3600;
+            });
+            if (expiring.length === 0) {
+              addRow('expiry', 'pass', 'Journey cookies not expiring soon', '');
+              lines.push('✔ Cookie expiry OK');
+            } else {
+              const expDetails = expiring.map(function(c) {
+                const mins = Math.max(0, Math.round((c.expirationDate - nowSec) / 60));
+                return c.name + ' expires in ~' + mins + 'm';
+              });
+              addRow('expiry', 'warn', 'Journey cookie expiring soon', expDetails.join(' · '));
+              lines.push('⚠ Expiring soon: ' + expDetails.join('; '));
+            }
+          }
+
+          // 11. Duplicate cookie names
+          const nameCounts = {};
+          cookies.forEach(function(c) { nameCounts[c.name] = (nameCounts[c.name] || 0) + 1; });
+          const dupes = Object.keys(nameCounts).filter(function(n) { return nameCounts[n] > 1; });
+          if (dupes.length === 0) {
+            addRow('dupes', 'pass', 'No duplicate cookie names', '');
+            lines.push('✔ No duplicate cookie names');
+          } else {
+            addRow('dupes', 'warn', 'Duplicate cookie names', dupes.join(', ') + ' — may cause tracking ambiguity');
+            lines.push('⚠ Duplicate cookies: ' + dupes.join(', '));
+          }
+
         } catch (e) {
           addRow('cook', 'fail', 'Cookie access denied', e.message || 'Permission error');
           lines.push('✖ Cookie access denied');
         }
+      }
+    }
+
+    // ── Always-on checks ────────────────────────────────────────────────
+    addSeparator('ext');
+
+    // 12. Banner blocker state
+    const bannerSwitch = document.querySelector('.bannerSwitch');
+    const bannerOn = bannerSwitch ? bannerSwitch.getAttribute('aria-checked') === 'true' : null;
+    if (bannerOn === null) {
+      addRow('banner', 'warn', 'Banner blocker state unknown', 'Control not found');
+      lines.push('⚠ Banner blocker state unknown');
+    } else if (bannerOn) {
+      addRow('banner', 'warn', 'Banner blocker is ON', 'May suppress consent banners during cookie testing');
+      lines.push('⚠ Banner blocker ON — may affect cookie capture');
+    } else {
+      addRow('banner', 'pass', 'Banner blocker is OFF', 'Banners will appear normally');
+      lines.push('✔ Banner blocker OFF');
+    }
+
+    // ── Tool-specific checks (only when tab is active) ───────────────────
+    const emulatorContent  = document.getElementById('content-screenemulator');
+    const contrastContent  = document.getElementById('content-contrastchecker');
+
+    // 13. Screen Emulator (tab present in DOM)
+    if (emulatorContent) {
+      addSeparator('emulator');
+      const emIsActive = emulatorContent.classList.contains('active');
+      const emLabel = 'Screen Emulator' + (emIsActive ? '' : ' (tab not active)');
+
+      const emulator = window.screenEmulator;
+      const queueCount = emulator && emulator.selectedDevices ? emulator.selectedDevices.length : 0;
+
+      if (queueCount === 0) {
+        addRow('em-queue', emIsActive ? 'warn' : 'pass', emLabel + ' — no devices queued',
+          emIsActive ? 'Add at least one device to the queue before opening' : '');
+        lines.push((emIsActive ? '⚠' : '✔') + ' Screen Emulator queue empty');
+      } else {
+        const deviceNames = emulator.selectedDevices.map(function(e) {
+          return (e.isLandscape ? '↻ ' : '') + (e.device ? e.device.name : 'Custom');
+        }).join(', ');
+        addRow('em-queue', 'pass', emLabel + ' — ' + queueCount + ' device' + (queueCount > 1 ? 's' : '') + ' queued', deviceNames);
+        lines.push('✔ Screen Emulator: ' + queueCount + ' device(s) queued — ' + deviceNames);
+      }
+    }
+
+    // 14. Contrast Checker (tab present in DOM)
+    if (contrastContent) {
+      addSeparator('contrast');
+      const ccIsActive = contrastContent.classList.contains('active');
+      const ccLabel = 'Contrast Checker' + (ccIsActive ? '' : ' (tab not active)');
+
+      const ratioCard  = document.getElementById('ccRatioCard');
+      const ratioBadge = document.getElementById('ccRatioBadge');
+      const ratioNum   = document.getElementById('ccRatioNum');
+
+      if (ratioCard && ratioBadge && ratioNum) {
+        const badgeTxt = ratioBadge.textContent.trim();
+        const rawNum   = ratioNum.textContent.replace(':1', '').trim();
+        const ratio    = parseFloat(rawNum);
+        const cardCls  = ratioCard.className;
+
+        if (cardCls.includes('pass')) {
+          addRow('cc-ratio', 'pass', ccLabel + ' — ' + rawNum + ':1 (' + badgeTxt + ')', 'WCAG AA compliance met');
+          lines.push('✔ Contrast ratio: ' + rawNum + ':1 — ' + badgeTxt);
+        } else if (cardCls.includes('partial')) {
+          addRow('cc-ratio', 'warn', ccLabel + ' — ' + rawNum + ':1 (' + badgeTxt + ')', 'Passes for large text only (≥18pt / ≥14pt bold)');
+          lines.push('⚠ Contrast ratio: ' + rawNum + ':1 — AA Large only');
+        } else if (!isNaN(ratio)) {
+          addRow('cc-ratio', 'fail', ccLabel + ' — ' + rawNum + ':1 (Fail)', 'Below WCAG AA minimum (4.5:1 normal, 3:1 large)');
+          lines.push('✖ Contrast ratio: ' + rawNum + ':1 — FAIL');
+        } else {
+          addRow('cc-ratio', 'warn', ccLabel + ' — no colors set', 'Enter foreground and background colors to check');
+          lines.push('⚠ Contrast Checker: no colors set');
+        }
+      } else {
+        addRow('cc-ratio', ccIsActive ? 'warn' : 'pass', ccLabel, ccIsActive ? 'Ratio unavailable' : 'Open the tab to run a check');
+        lines.push((ccIsActive ? '⚠' : '✔') + ' Contrast Checker: ' + (ccIsActive ? 'ratio unavailable' : 'tab inactive'));
       }
     }
 
