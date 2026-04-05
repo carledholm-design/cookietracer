@@ -87,7 +87,7 @@ function rlEaseLabel(ease) {
 
   async function getActiveTab() {
     return new Promise(resolve => {
-      chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+      chrome.tabs.query({ active: true, lastFocusedWindow: true }, tabs => {
         resolve(tabs && tabs.length ? tabs[0] : null);
       });
     });
