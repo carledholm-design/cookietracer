@@ -33,11 +33,11 @@ function rlAnalyzeText(text) {
 }
 
 function rlGradeInfo(grade) {
-  if (grade <= 6)  return { label: 'Elementary',   note: 'Grade 5–6, ages 10–12',  status: 'pass' };
-  if (grade <= 8)  return { label: 'Middle School', note: 'Grade 7–8, ages 12–14',  status: 'pass' };
-  if (grade <= 10) return { label: 'High School',   note: 'Grade 9–10, ages 14–16', status: 'warn' };
-  if (grade <= 12) return { label: 'Senior High',   note: 'Grade 11–12, ages 16–18',status: 'warn' };
-  return               { label: 'College Level',   note: 'Above Grade 12',          status: 'fail' };
+  if (grade <= 6)  return { label: 'Elementary',   note: 'Grade 5–6, ages 10–12',   status: 'pass' };
+  if (grade <= 8)  return { label: 'Middle School', note: 'Grade 7–8, ages 12–14',   status: 'pass' };
+  if (grade <= 10) return { label: 'High School',   note: 'Grade 9–10, ages 14–16',  status: 'warn' };
+  if (grade <= 12) return { label: 'Senior High',   note: 'Grade 11–12, ages 16–18', status: 'warn' };
+  return               { label: 'College Level',   note: 'Above Grade 12',           status: 'fail' };
 }
 
 function rlEaseLabel(ease) {
@@ -66,6 +66,7 @@ function rlEaseLabel(ease) {
   const sentCntEl   = document.getElementById('rlSentCount');
   const wpsEl       = document.getElementById('rlWps');
   const pharmaEl    = document.getElementById('rlPharmaNote');
+  const pageUrlEl   = document.getElementById('rlPageUrl');
 
   if (!analyzeBtn) return;
 
@@ -75,20 +76,32 @@ function rlEaseLabel(ease) {
     statusEl.className = 'rl-status' + (cls ? ' ' + cls : '');
   }
 
+  function resetTool() {
+    if (resultsEl) resultsEl.classList.add('hidden');
+    if (pharmaEl)  pharmaEl.classList.add('hidden');
+    if (pageUrlEl) pageUrlEl.textContent = '';
+    setStatus('');
+    analyzeBtn.disabled = false;
+    analyzeBtn.textContent = 'Analyze Page';
+  }
+
+  async function getActiveTab() {
+    return new Promise(resolve => {
+      chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+        resolve(tabs && tabs.length ? tabs[0] : null);
+      });
+    });
+  }
+
   async function runAnalysis() {
     analyzeBtn.disabled = true;
     analyzeBtn.textContent = 'Analyzing…';
     setStatus('');
     if (resultsEl) resultsEl.classList.add('hidden');
 
-    let tabId = null;
-    try {
-      const tracked = await new Promise(r => chrome.runtime.sendMessage({ type: 'GET_TRACKED' }, r));
-      tabId = tracked?.trackedTabId;
-    } catch (e) {}
-
-    if (!tabId) {
-      setStatus('No tab pinned. Pin a tab first.', 'warn');
+    const tab = await getActiveTab();
+    if (!tab || !tab.id) {
+      setStatus('Could not detect the active tab.', 'warn');
       analyzeBtn.disabled = false;
       analyzeBtn.textContent = 'Analyze Page';
       return;
@@ -98,7 +111,7 @@ function rlEaseLabel(ease) {
     try {
       const resp = await new Promise((resolve, reject) => {
         const t = setTimeout(() => reject(new Error('timeout')), 6000);
-        chrome.tabs.sendMessage(tabId, { type: 'EXTRACT_TEXT' }, r => {
+        chrome.tabs.sendMessage(tab.id, { type: 'EXTRACT_TEXT' }, r => {
           clearTimeout(t);
           if (chrome.runtime.lastError) reject(new Error(chrome.runtime.lastError.message));
           else resolve(r);
@@ -106,7 +119,7 @@ function rlEaseLabel(ease) {
       });
       text = resp?.text || '';
     } catch (e) {
-      setStatus('Could not read page text. Try refreshing the pinned tab.', 'fail');
+      setStatus('Could not read page text. Try refreshing the page.', 'fail');
       analyzeBtn.disabled = false;
       analyzeBtn.textContent = 'Analyze Page';
       return;
@@ -139,6 +152,15 @@ function rlEaseLabel(ease) {
     if (sentCntEl)   sentCntEl.textContent = stats.sentenceCount.toLocaleString();
     if (wpsEl)       wpsEl.textContent = stats.wps;
 
+    if (pageUrlEl && tab.url) {
+      try {
+        const u = new URL(tab.url);
+        pageUrlEl.textContent = u.hostname + u.pathname;
+      } catch (e) {
+        pageUrlEl.textContent = tab.url;
+      }
+    }
+
     if (pharmaEl) {
       if (stats.grade > 8) {
         pharmaEl.textContent = 'FDA guidance recommends patient materials target Grade 6–8. This page reads above that threshold.';
@@ -157,4 +179,19 @@ function rlEaseLabel(ease) {
   }
 
   analyzeBtn.addEventListener('click', runAnalysis);
+
+  // ── Reset on navigation or tab switch ──────────────────────────────
+  // When the active tab navigates to a new URL, clear stale results
+  try {
+    chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
+      if (changeInfo.url || changeInfo.status === 'loading') {
+        chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+          if (tabs && tabs[0] && tabs[0].id === tabId) resetTool();
+        });
+      }
+    });
+
+    // When the user switches to a different tab, also reset
+    chrome.tabs.onActivated.addListener(() => resetTool());
+  } catch (e) {}
 })();
