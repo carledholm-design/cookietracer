@@ -473,3 +473,28 @@
   width: fit-content;
   margin-top: 2px;
 }
+
+/* ── Footer logo strip ───────────────────────────────────────────── */
+.bottombar {
+  height: auto !important;
+}
+.bottombar-logos {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 7px 14px;
+}
+.bottombar-logo {
+  display: block;
+  height: 18px;
+  width: auto;
+  opacity: 0.55;
+  transition: opacity 0.15s ease;
+}
+.bottombar-logo:hover {
+  opacity: 0.85;
+}
+.bottombar-logo--rfh {
+  mix-blend-mode: screen;
+  height: 22px;
+}
