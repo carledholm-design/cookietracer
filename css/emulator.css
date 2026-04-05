@@ -10,7 +10,7 @@
 
 .emulator-cat {
   padding: 5px 14px;
-  border-radius: 20px;
+  border-radius: var(--md-sys-shape-full);
   border: 1px solid var(--md-sys-color-outline-variant);
   background: transparent;
   color: var(--md-sys-color-on-surface-variant);
@@ -46,7 +46,7 @@
   align-items: center;
   gap: 5px;
   padding: 10px 6px 8px;
-  border-radius: 12px;
+  border-radius: var(--md-sys-shape-medium);
   border: 1.5px solid var(--md-sys-color-outline-variant);
   background: var(--md-sys-color-surface-container);
   cursor: pointer;
@@ -130,7 +130,7 @@
 .emulator-custom input {
   flex: 1;
   padding: 8px 10px;
-  border-radius: 8px;
+  border-radius: var(--md-sys-shape-small);
   border: 1.5px solid var(--md-sys-color-outline-variant);
   background: var(--md-sys-color-surface-container);
   color: var(--md-sys-color-on-surface);
@@ -157,7 +157,7 @@
   align-items: center;
   gap: 4px;
   padding: 7px 10px;
-  border-radius: 8px;
+  border-radius: var(--md-sys-shape-small);
   border: 1.5px solid var(--md-sys-color-outline-variant);
   background: var(--md-sys-color-surface-container-high);
   color: var(--md-sys-color-on-surface-variant);
@@ -181,7 +181,7 @@
   right: 5px;
   width: 16px;
   height: 16px;
-  border-radius: 50%;
+  border-radius: var(--md-sys-shape-full);
   background: var(--md-sys-color-primary);
   color: var(--md-sys-color-on-primary);
   display: flex;
@@ -274,7 +274,7 @@
 .emulator-item-rotate {
   width: 26px;
   height: 26px;
-  border-radius: 6px;
+  border-radius: var(--md-sys-shape-extra-small);
   border: 1px solid var(--md-sys-color-outline-variant);
   background: transparent;
   color: var(--md-sys-color-on-surface-variant);
@@ -300,7 +300,7 @@
 .emulator-item-remove {
   width: 26px;
   height: 26px;
-  border-radius: 6px;
+  border-radius: var(--md-sys-shape-extra-small);
   border: none;
   background: transparent;
   color: var(--md-sys-color-on-surface-variant);
@@ -331,7 +331,7 @@
   border: none;
   background: transparent;
   padding: 0;
-  border-radius: 4px;
+  border-radius: var(--md-sys-shape-extra-small);
   transition: color 0.15s;
 }
 
@@ -370,7 +370,7 @@
 .emulator-open-btn {
   flex: 1;
   padding: 9px 16px;
-  border-radius: 8px;
+  border-radius: var(--md-sys-shape-small);
   border: none;
   background: var(--md-sys-color-primary);
   color: var(--md-sys-color-on-primary);
@@ -401,7 +401,7 @@
   gap: 6px;
   height: 38px;
   padding: 0 14px;
-  border-radius: 8px;
+  border-radius: var(--md-sys-shape-small);
   border: 1.5px solid var(--md-sys-color-outline-variant);
   background: transparent;
   color: var(--md-sys-color-on-surface-variant);
@@ -429,35 +429,40 @@
 .tool-drawer {
   position: fixed;
   top: 0;
-  right: -280px;
-  width: 280px;
-  height: 100%;
+  right: 0;
+  bottom: 0;
+  width: 300px;
+  max-width: 85vw;
   background: var(--md-sys-color-surface-container-high);
   border-left: 1px solid var(--md-sys-color-outline-variant);
-  z-index: 200;
-  transition: right 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 810;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  box-shadow: var(--md-sys-elevation-3);
+  transform: translateX(100%);
+  transition: transform var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-emphasized);
 }
 
 .tool-drawer.open {
-  right: 0;
+  transform: translateX(0);
 }
 
 .tool-drawer-scrim {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  z-index: 199;
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 800;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s;
+  transition: opacity var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
 }
 
 .tool-drawer-scrim.open {
   opacity: 1;
-  pointer-events: all;
+  pointer-events: auto;
 }
 
 .tool-drawer-item.active {
@@ -493,7 +498,7 @@
   height: calc(100% - 8px);
   align-self: center;
   margin-right: 6px;
-  border-radius: 8px;
+  border-radius: var(--md-sys-shape-small);
   border: 1px solid var(--md-sys-color-outline-variant);
   background: var(--md-sys-color-surface-container-high);
   color: var(--md-sys-color-on-surface-variant);
@@ -519,7 +524,7 @@
   justify-content: center;
   width: 14px;
   height: 14px;
-  border-radius: 3px;
+  border-radius: var(--md-sys-shape-extra-small);
   border: none;
   background: transparent;
   color: var(--md-sys-color-on-surface-variant);
