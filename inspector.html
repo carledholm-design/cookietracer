@@ -517,6 +517,84 @@
       </section>
     </div>
 
+    <!-- Tab Content: Reading Level -->
+    <div class="tab-content" id="content-readinglevel">
+      <section class="section">
+        <div class="sectionHeader">Reading Level Analyzer</div>
+        <div class="rl-intro">Analyzes visible page text using the Flesch-Kincaid formula — the standard referenced in FDA guidance for patient-facing materials.</div>
+        <div class="rl-action">
+          <button class="rl-analyze-btn" id="rlAnalyzeBtn">Analyze Page</button>
+          <div class="rl-status" id="rlStatus"></div>
+        </div>
+        <div class="rl-results hidden" id="rlResults">
+          <div class="rl-card rl-card--primary">
+            <div class="rl-card-label">Flesch-Kincaid Grade Level</div>
+            <div class="rl-card-main">
+              <span class="rl-grade-num" id="rlGradeNum">—</span>
+              <span class="rl-grade-label" id="rlGradeLabel">—</span>
+            </div>
+            <div class="rl-grade-note" id="rlGradeNote"></div>
+          </div>
+          <div class="rl-card">
+            <div class="rl-card-label">Reading Ease Score</div>
+            <div class="rl-card-main">
+              <span class="rl-ease-num" id="rlEaseNum">—</span>
+              <span class="rl-ease-label" id="rlEaseLabel">—</span>
+            </div>
+            <div class="rl-ease-note">Higher = easier to read &nbsp;·&nbsp; 100 = simplest</div>
+          </div>
+          <div class="rl-stats">
+            <div class="rl-stat">
+              <div class="rl-stat-num" id="rlWordCount">—</div>
+              <div class="rl-stat-label">Words</div>
+            </div>
+            <div class="rl-stat">
+              <div class="rl-stat-num" id="rlSentCount">—</div>
+              <div class="rl-stat-label">Sentences</div>
+            </div>
+            <div class="rl-stat">
+              <div class="rl-stat-num" id="rlWps">—</div>
+              <div class="rl-stat-label">Words / Sentence</div>
+            </div>
+          </div>
+          <div class="rl-pharma-note hidden" id="rlPharmaNote"></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Tab Content: Staging vs. Prod -->
+    <div class="tab-content" id="content-stagingcompare">
+      <section class="section">
+        <div class="sectionHeader">Staging vs. Prod</div>
+        <div class="sc-intro">Opens two URLs side by side in separate windows for a live visual comparison.</div>
+        <div class="sc-fields">
+          <div class="sc-field">
+            <label class="sc-label" for="scProdUrl">Production URL</label>
+            <input class="sc-input" type="url" id="scProdUrl" placeholder="https://www.austedo.com/…" />
+          </div>
+          <div class="sc-swap-row">
+            <button class="sc-swap-btn" id="scSwapBtn" title="Swap URLs" aria-label="Swap URLs">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 16V4m0 0L3 8m4-4l4 4"/><path d="M17 8v12m0 0l4-4m-4 4l-4-4"/>
+              </svg>
+            </button>
+            <button class="sc-auto-btn" id="scAutoDetect">Use pinned URL</button>
+          </div>
+          <div class="sc-field">
+            <label class="sc-label" for="scStagingUrl">Staging / UAT URL</label>
+            <input class="sc-input" type="url" id="scStagingUrl" placeholder="https://uat.austedo.com/…" />
+          </div>
+        </div>
+        <div class="sc-status" id="scStatus"></div>
+        <button class="sc-open-btn" id="scOpenBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="9" height="18" rx="1"/><rect x="13" y="3" width="9" height="18" rx="1"/>
+          </svg>
+          Open Side by Side
+        </button>
+      </section>
+    </div>
+
   </main>
 
   <!-- Issues Slide-Out Panel -->
@@ -570,6 +648,34 @@
     </div>
     <div class="tool-drawer-list" id="toolDrawerList">
 
+      <!-- Reading Level -->
+      <button class="tool-drawer-item" data-tool="readinglevel">
+        <div class="tool-drawer-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+          </svg>
+        </div>
+        <div class="tool-drawer-label">
+          <span class="tool-drawer-name">Reading Level</span>
+          <span class="tool-drawer-desc">Flesch-Kincaid grade level analyzer</span>
+        </div>
+      </button>
+
+      <!-- Staging vs Prod -->
+      <button class="tool-drawer-item" data-tool="stagingcompare">
+        <div class="tool-drawer-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="9" height="18" rx="1.5"/>
+            <rect x="13" y="3" width="9" height="18" rx="1.5"/>
+          </svg>
+        </div>
+        <div class="tool-drawer-label">
+          <span class="tool-drawer-name">Staging vs. Prod</span>
+          <span class="tool-drawer-desc">Open two URLs side by side</span>
+        </div>
+      </button>
+
       <!-- Screen Emulator -->
       <button class="tool-drawer-item" data-tool="screenemulator">
         <div class="tool-drawer-icon">
@@ -589,9 +695,11 @@
   </div>
 
   <script src="tab-manager-v17.js?v=18.5"></script>
-  <script src="tool-drawer.js?v=19.3"></script>
+  <script src="tool-drawer.js?v=19.4"></script>
   <script src="screen-emulator.js?v=19.2"></script>
   <script src="contrast-checker.js?v=19.3"></script>
+  <script src="reading-level.js?v=19.4"></script>
+  <script src="staging-compare.js?v=19.4"></script>
   <script src="inspector.js?v=18.5"></script>
 </body>
 </html>
