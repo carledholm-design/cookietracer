@@ -13,6 +13,9 @@ body {
   font: var(--md-sys-typescale-body-medium);
   user-select: none;
   -webkit-font-smoothing: antialiased;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
 }
 
 /* --- Top App Bar (MD3 Small) --- */
@@ -123,7 +126,7 @@ body {
 .menusep { height: 1px; background: var(--md-sys-color-outline-variant); margin: 8px 0; }
 
 /* --- Main Content --- */
-.content { padding: 0 16px 16px; max-width: 800px; margin: 0 auto; }
+.content { padding: 0 16px 16px; max-width: 800px; margin: 0 auto; flex: 1; }
 
 /* --- Section Cards (MD3 Card â€” Filled) --- */
 .context, .section {
