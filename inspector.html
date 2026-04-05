@@ -567,7 +567,16 @@
     <div class="tab-content" id="content-stagingcompare">
       <section class="section">
         <div class="sectionHeader">Staging vs. Prod</div>
-        <div class="sc-intro">Opens two URLs side by side in separate windows for a live visual comparison.</div>
+
+        <!-- Active session banner -->
+        <div class="sc-active-bar hidden" id="scActiveBar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          Comparison session running
+        </div>
+
+        <!-- URL inputs -->
         <div class="sc-fields">
           <div class="sc-field">
             <label class="sc-label" for="scProdUrl">Production URL</label>
@@ -586,13 +595,53 @@
             <input class="sc-input" type="url" id="scStagingUrl" placeholder="https://uat.austedo.com/…" />
           </div>
         </div>
+
+        <!-- Mode selector -->
+        <div class="sc-section-label">View Mode</div>
+        <div class="sc-mode-pills">
+          <button class="sc-mode-pill active" id="scModeDesktop">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+            </svg>
+            Desktop
+          </button>
+          <button class="sc-mode-pill" id="scModeMobile">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="7" y="2" width="10" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>
+            </svg>
+            Mobile
+          </button>
+        </div>
+
+        <!-- Sync options -->
+        <div class="sc-section-label">Sync Options</div>
+        <div class="sc-sync-opts">
+          <label class="sc-sync-row">
+            <span class="sc-sync-label">Sync Scroll</span>
+            <input type="checkbox" class="sc-toggle" id="scSyncScroll" checked />
+          </label>
+          <label class="sc-sync-row">
+            <span class="sc-sync-label">Sync Navigation</span>
+            <input type="checkbox" class="sc-toggle" id="scSyncNav" checked />
+          </label>
+        </div>
+
         <div class="sc-status" id="scStatus"></div>
+
+        <!-- Action buttons -->
         <button class="sc-open-btn" id="scOpenBtn">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="2" y="3" width="9" height="18" rx="1"/><rect x="13" y="3" width="9" height="18" rx="1"/>
           </svg>
-          Open Side by Side
+          Open Comparison
         </button>
+        <button class="sc-close-btn" id="scCloseBtn" style="display:none">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+          Close Comparison
+        </button>
+
       </section>
     </div>
 
@@ -700,7 +749,7 @@
   <script src="screen-emulator.js?v=19.2"></script>
   <script src="contrast-checker.js?v=19.3"></script>
   <script src="reading-level.js?v=19.5"></script>
-  <script src="staging-compare.js?v=19.4"></script>
+  <script src="staging-compare.js?v=19.6"></script>
   <script src="inspector.js?v=18.5"></script>
 </body>
 </html>
