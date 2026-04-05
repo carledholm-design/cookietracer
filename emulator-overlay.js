@@ -192,8 +192,16 @@ function handleSyncMessage(e) {
   }
 
   if (msg.type === 'CT_EMULATOR_LOADED') {
-    frameUrls.set(src, msg.url);
     setUrlBar(msg.url);
+    if (syncNav) {
+      overlayIframes.forEach(f => {
+        if (f !== src && frameUrls.get(f) !== msg.url) {
+          frameUrls.set(f, msg.url);
+          f.src = msg.url;
+        }
+      });
+    }
+    frameUrls.set(src, msg.url);
   }
 }
 
