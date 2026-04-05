@@ -12,7 +12,7 @@
 .cc-color-block { flex: 1; min-width: 0; }
 
 .cc-color-label {
-  font-size: 10px;
+  font: var(--md-sys-typescale-label-small);
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -26,7 +26,7 @@
   align-items: stretch;
   height: 38px;
   border: 1.5px solid var(--md-sys-color-outline-variant);
-  border-radius: 8px;
+  border-radius: var(--md-sys-shape-small);
   overflow: hidden;
   background: var(--md-sys-color-surface-container);
   transition: border-color 0.15s;
@@ -73,7 +73,7 @@
   justify-content: center;
   width: 32px;
   height: 32px;
-  border-radius: 50%;
+  border-radius: var(--md-sys-shape-full);
   border: 1.5px solid var(--md-sys-color-outline-variant);
   background: var(--md-sys-color-surface-container);
   color: var(--md-sys-color-on-surface-variant);
@@ -102,13 +102,13 @@
 
 .cc-preview {
   margin: 0 16px 10px;
-  border-radius: 10px;
+  border-radius: var(--md-sys-shape-medium);
   overflow: hidden;
   border: 1.5px solid var(--md-sys-color-outline-variant);
 }
 
 .cc-preview-label {
-  font-size: 10px;
+  font: var(--md-sys-typescale-label-small);
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -135,7 +135,7 @@
 
 .cc-ui-btn {
   padding: 4px 12px;
-  border-radius: 6px;
+  border-radius: var(--md-sys-shape-extra-small);
   border: 1.5px solid currentColor;
   font-size: 13px;
   font-weight: 500;
@@ -150,7 +150,7 @@
 .cc-ratio-card {
   margin: 0 16px 10px;
   padding: 14px 16px 12px;
-  border-radius: 12px;
+  border-radius: var(--md-sys-shape-medium);
   border: 1.5px solid var(--md-sys-color-outline-variant);
   background: var(--md-sys-color-surface-container-high);
   transition: border-color 0.2s, background 0.2s;
@@ -198,7 +198,7 @@
   font-size: 11px;
   font-weight: 800;
   padding: 4px 10px;
-  border-radius: 6px;
+  border-radius: var(--md-sys-shape-extra-small);
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -209,7 +209,7 @@
 .cc-badge--fail     { background: color-mix(in srgb, var(--md-sys-color-error) 13%, transparent); color: var(--md-sys-color-error); }
 
 .cc-ratio-label {
-  font-size: 10px;
+  font: var(--md-sys-typescale-label-small);
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -246,7 +246,7 @@
 .cc-wcag { padding: 0 16px 16px; }
 
 .cc-wcag-title {
-  font-size: 10px;
+  font: var(--md-sys-typescale-label-small);
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -263,7 +263,7 @@
 
 .cc-wcag-card {
   padding: 10px 12px;
-  border-radius: 8px;
+  border-radius: var(--md-sys-shape-small);
   border: 1.5px solid var(--md-sys-color-outline-variant);
   background: var(--md-sys-color-surface-container);
   display: flex;
