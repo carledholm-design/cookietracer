@@ -1998,6 +1998,7 @@
   font: var(--md-sys-typescale-body-small);
   font-size: 12px;
   line-height: 1.5;
+  min-height: 160px;
   resize: vertical;
   transition: border-color var(--md-sys-motion-duration-short3);
 }
