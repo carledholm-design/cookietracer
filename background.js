@@ -213,7 +213,6 @@ chrome.cookies.onChanged.addListener((changeInfo) => {
       if (cookieDomain.includes(state.host) || state.host.includes(cookieDomain.replace(/^\./, ''))) {
         if (!state.tabCookies) state.tabCookies = new Set();
         state.tabCookies.add(cookieKey(cookie));
-        console.log(`[Cookie Tracer+] Tab ${tabId} set cookie: ${cookie.name}`);
       }
     }
   } catch (error) {
@@ -226,7 +225,6 @@ chrome.cookies.onChanged.addListener((changeInfo) => {
 chrome.webRequest.onCompleted.addListener(
   async (details) => {
     if (details.statusCode >= 400 && details.tabId > 0 && details.type === 'main_frame') {
-      console.log(`[Error Monitor] ${details.statusCode} on ${details.url}`);
       
       const is5xx = details.statusCode >= 500;
       const errorEntry = {
@@ -267,7 +265,7 @@ chrome.webRequest.onCompleted.addListener(
           errorEntry.body = html.substring(0, 50000);
           errorEntry.parsed = parseAspNetError(html);
         } catch (e) {
-          console.log('[Error Monitor] Could not fetch body:', e.message);
+          // body fetch failed — continue without it
         }
       }
       
@@ -457,7 +455,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       
       // New: Fetch sitemap (background script has no CORS restrictions)
       if (msg?.type === "FETCH_SITEMAP") {
-        console.log('[Background] Fetching sitemap:', msg.url);
         try {
           const response = await fetch(msg.url, {
             method: 'GET',
@@ -467,8 +464,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             }
           });
           
-          console.log('[Background] Fetch response status:', response.status);
-          
           if (!response.ok) {
             // console.warn('[Background] Sitemap not found:', msg.url, 'Status:', response.status);
             sendResponse({ ok: false, error: `HTTP ${response.status}` });
@@ -476,7 +471,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
           }
           
           const xml = await response.text();
-          console.log('[Background] Fetched sitemap, length:', xml.length);
           sendResponse({ ok: true, xml: xml });
         } catch (error) {
           // console.error('[Background] FETCH_SITEMAP error:', error);
@@ -513,7 +507,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       // New: Force track a specific tab
       if (msg?.type === "TRACK_THIS_TAB") {
         const { tabId, url, title } = msg;
-        console.log('[Background] Forcing track of tab:', tabId, url);
         
         try {
           // Store in session
@@ -535,7 +528,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             if (st) {
               st.baseline = cookies;
               st.baselineAt = Date.now();
-              console.log('[Background] Captured', cookies.length, 'baseline cookies for newly pinned tab');
             }
           }
           
