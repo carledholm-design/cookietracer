@@ -290,6 +290,7 @@ class ScreenEmulator {
         });
         if (resp?.ok) {
           this.overlayActive = true;
+          this.saveOverlayState();
         } else {
           console.error('Screen Emulator: background error —', resp?.error);
         }
@@ -322,6 +323,7 @@ class ScreenEmulator {
       }
 
       this.overlayActive = false;
+      this.saveOverlayState();
       setTimeout(() => {
         closeBtn.innerHTML = originalHTML;
         this.updateActionButtons();
@@ -375,6 +377,12 @@ class ScreenEmulator {
     } catch (e) {}
   }
 
+  saveOverlayState() {
+    try {
+      chrome.storage.session.set({ emulatorOverlayActive: this.overlayActive });
+    } catch (e) {}
+  }
+
   restoreState() {
     try {
       chrome.storage.local.get(['emulatorState'], (result) => {
@@ -392,6 +400,13 @@ class ScreenEmulator {
           this.renderDeviceList();
           this.updateOpenBtn();
         }
+      });
+
+      // Restore overlay active state from session storage so the
+      // Close Emulator button reflects reality after popup reopen
+      chrome.storage.session.get(['emulatorOverlayActive'], (result) => {
+        this.overlayActive = !!result.emulatorOverlayActive;
+        this.updateActionButtons();
       });
     } catch (e) {}
   }
