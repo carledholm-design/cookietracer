@@ -38,6 +38,9 @@ if (_bannerBtn) {
   _bannerBtn.title = "Cookie Banner Blocker: Off";
 }
 chrome.storage.sync.remove("hideCookieBanner");
+
+// Pin always resets to OFF when the panel opens — explicit pin each session
+chrome.storage.session.remove(['trackedTabId', 'trackedUrl', 'trackedTitle', 'trackedWindowId']);
 let __cookieValueCache = new Map();
 let __lastNoticeKey = null;
 let __sessionToken = 0; // Incremented on unpin — stale fetchReport calls abort
