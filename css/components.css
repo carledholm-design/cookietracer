@@ -110,7 +110,14 @@
   position: sticky;
   top: 65px; /* below topbar (64px min-height + 1px border) */
   z-index: 90;
+  border-radius: 8px 8px 0 0;
 }
+/* First section connects flush under tab bar */
+.tab-content > .section:first-child {
+  border-radius: 0 0 var(--md-sys-shape-medium) var(--md-sys-shape-medium);
+  margin-top: 0;
+}
+
 
 /* Individual tab â€” Chrome-style */
 .tab {
