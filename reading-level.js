@@ -185,7 +185,7 @@ function rlEaseLabel(ease) {
   try {
     chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
       if (changeInfo.url || changeInfo.status === 'loading') {
-        chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+        chrome.tabs.query({ active: true, lastFocusedWindow: true }, tabs => {
           if (tabs && tabs[0] && tabs[0].id === tabId) resetTool();
         });
       }
