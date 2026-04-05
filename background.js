@@ -16,6 +16,10 @@ self.addEventListener('unhandledrejection', (event) => {
 let inspectorWindowId = null;
 let inspectorWindowTabId = null;
 
+// ── Staging vs Prod comparison session ───────────────────────────────
+let scSession = null;
+// { winIds: [id1,id2], tabIds: [tid1,tid2], urls: [url1,url2], syncScroll: bool, syncNav: bool }
+
 // Clear stale tracking on install/update — guarantees clean state
 chrome.runtime.onInstalled.addListener(() => {
   chrome.storage.session.remove(['trackedTabId', 'trackedUrl', 'trackedTitle', 'trackedWindowId']).catch(() => {});
@@ -376,7 +380,15 @@ chrome.action.onClicked.addListener(async () => {
     logError('action.onClicked', error);
   }
 });
-chrome.windows.onRemoved.addListener((winId) => { if (winId === inspectorWindowId) { inspectorWindowId = null; inspectorWindowTabId = null; } });
+chrome.windows.onRemoved.addListener((winId) => {
+  if (winId === inspectorWindowId) { inspectorWindowId = null; inspectorWindowTabId = null; }
+  if (scSession && scSession.winIds.includes(winId)) {
+    const otherId = scSession.winIds.find(id => id !== winId);
+    if (otherId) { try { chrome.windows.remove(otherId).catch(() => {}); } catch {} }
+    scSession = null;
+    chrome.runtime.sendMessage({ type: 'SC_SESSION_ENDED' }).catch(() => {});
+  }
+});
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   (async () => {
     try {
@@ -385,6 +397,110 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         sendResponse({ ok: true, ...data }); 
         return;
       }
+
+      // ── Staging vs Prod comparison ──────────────────────────────────
+      if (msg?.type === "OPEN_COMPARISON") {
+        // Close any existing session first
+        if (scSession) {
+          for (const wid of scSession.winIds) {
+            try { await chrome.windows.remove(wid).catch(() => {}); } catch {}
+          }
+          scSession = null;
+        }
+        const { url1, url2, mode, syncScroll, syncNav, screenW, screenH } = msg;
+        let left1, left2, top1, top2, w1, h1, w2, h2;
+        if (mode === 'mobile') {
+          w1 = w2 = 430; h1 = h2 = 844;
+          const totalW = w1 + w2 + 24;
+          left1 = Math.max(0, Math.floor((screenW - totalW) / 2));
+          left2 = left1 + w1 + 24;
+          top1 = top2 = Math.max(0, Math.floor((screenH - h1) / 4));
+        } else {
+          w1 = w2 = Math.floor(screenW / 2);
+          h1 = h2 = screenH;
+          left1 = 0; left2 = w1; top1 = top2 = 0;
+        }
+        try {
+          const [win1, win2] = await Promise.all([
+            chrome.windows.create({ url: url1, type: 'normal', left: left1, top: top1, width: w1, height: h1 }),
+            chrome.windows.create({ url: url2, type: 'normal', left: left2, top: top2, width: w2, height: h2 })
+          ]);
+          const tabId1 = win1.tabs?.[0]?.id;
+          const tabId2 = win2.tabs?.[0]?.id;
+          scSession = { winIds: [win1.id, win2.id], tabIds: [tabId1, tabId2], urls: [url1, url2], syncScroll, syncNav };
+          async function injectSync(tabId) {
+            await new Promise(resolve => {
+              let done = false;
+              const listener = (tid, changeInfo) => {
+                if (tid === tabId && changeInfo.status === 'complete' && !done) {
+                  done = true;
+                  chrome.tabs.onUpdated.removeListener(listener);
+                  resolve();
+                }
+              };
+              chrome.tabs.onUpdated.addListener(listener);
+              setTimeout(() => { if (!done) { done = true; chrome.tabs.onUpdated.removeListener(listener); resolve(); } }, 10000);
+            });
+            try { await chrome.scripting.executeScript({ target: { tabId }, files: ['comparison-content.js'] }); } catch {}
+          }
+          if (tabId1) injectSync(tabId1).catch(() => {});
+          if (tabId2) injectSync(tabId2).catch(() => {});
+          sendResponse({ ok: true });
+        } catch (e) {
+          sendResponse({ ok: false, error: e.message });
+        }
+        return;
+      }
+      if (msg?.type === "CLOSE_COMPARISON") {
+        if (scSession) {
+          for (const wid of scSession.winIds) {
+            try { await chrome.windows.remove(wid).catch(() => {}); } catch {}
+          }
+          scSession = null;
+        }
+        sendResponse({ ok: true });
+        return;
+      }
+      if (msg?.type === "SC_SCROLL") {
+        if (scSession?.syncScroll) {
+          const senderTabId = sender?.tab?.id;
+          const otherTabId = scSession.tabIds.find(id => id !== senderTabId);
+          if (otherTabId) {
+            try { await chrome.tabs.sendMessage(otherTabId, { type: 'SC_DO_SCROLL', scrollX: msg.scrollX, scrollY: msg.scrollY }).catch(() => {}); } catch {}
+          }
+        }
+        sendResponse({ ok: true });
+        return;
+      }
+      if (msg?.type === "SC_NAVIGATE") {
+        if (scSession?.syncNav) {
+          const senderTabId = sender?.tab?.id;
+          const senderIdx = scSession.tabIds.indexOf(senderTabId);
+          const otherIdx = senderIdx === 0 ? 1 : 0;
+          const otherTabId = scSession.tabIds[otherIdx];
+          const otherBaseUrl = scSession.urls[otherIdx];
+          if (otherTabId && otherBaseUrl) {
+            try {
+              const base = new URL(otherBaseUrl);
+              const targetUrl = base.origin + msg.path;
+              scSession.urls[otherIdx] = targetUrl;
+              await chrome.tabs.sendMessage(otherTabId, { type: 'SC_DO_NAVIGATE', url: targetUrl }).catch(() => {});
+            } catch {}
+          }
+        }
+        sendResponse({ ok: true });
+        return;
+      }
+      if (msg?.type === "SC_UPDATE_OPTS") {
+        if (scSession) { scSession.syncScroll = msg.syncScroll; scSession.syncNav = msg.syncNav; }
+        sendResponse({ ok: true });
+        return;
+      }
+      if (msg?.type === "GET_SC_SESSION") {
+        sendResponse({ ok: true, active: !!scSession });
+        return;
+      }
+      // ── End comparison ──────────────────────────────────────────────
       if (msg?.type === "OPEN_EMULATOR_IN_TAB") {
         const data = await chrome.storage.session.get(["trackedTabId","trackedWindowId","trackedUrl"]);
         const tabId = data?.trackedTabId;
