@@ -50,6 +50,11 @@
       "matches": ["<all_urls>"],
       "js": ["emulator-overlay.js"],
       "run_at": "document_idle"
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
     }
   ]
 }
