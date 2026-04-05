@@ -489,12 +489,13 @@
   display: block;
   height: 18px;
   width: auto;
-  opacity: 0.55;
+  opacity: 0.75;
+  filter: invert(1);
   transition: opacity 0.15s ease;
 }
 .bottombar-logo:hover {
-  opacity: 0.85;
+  opacity: 1;
 }
 .bottombar-logo--rfh {
-  height: 22px;
+  height: 20px;
 }
