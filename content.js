@@ -57,6 +57,34 @@
     // Extension context invalidated
   }
 
+  // Extracts visible body text for reading-level analysis
+  function extractVisibleText() {
+    const SKIP = new Set(['script','style','noscript','nav','header','footer',
+                          'svg','iframe','button','select','option','input','textarea']);
+    const BLOCK = new Set(['p','h1','h2','h3','h4','h5','h6','li','td','th',
+                           'div','section','article','blockquote','figcaption']);
+    function walk(node) {
+      if (!node) return '';
+      if (node.nodeType === Node.TEXT_NODE) {
+        const t = node.textContent.replace(/\s+/g, ' ').trim();
+        return t ? t + ' ' : '';
+      }
+      if (node.nodeType !== Node.ELEMENT_NODE) return '';
+      const tag = (node.tagName || '').toLowerCase();
+      if (SKIP.has(tag)) return '';
+      try {
+        const s = window.getComputedStyle(node);
+        if (s.display === 'none' || s.visibility === 'hidden') return '';
+      } catch (e) {}
+      let out = '';
+      for (const child of node.childNodes) out += walk(child);
+      if (BLOCK.has(tag) && out.trim()) out = out.trim() + '. ';
+      return out;
+    }
+    const root = document.querySelector('main, [role="main"], #main-content, .main-content, article') || document.body;
+    return walk(root).replace(/\s+/g, ' ').replace(/\.\s*\./g, '.').trim();
+  }
+
   // Receive explicit close request with better error handling
   chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     try {
@@ -77,6 +105,11 @@
       if (msg && msg.type === "CLOSE_COOKIE_BANNER") {
         // Banner hiding handled by banner-blocker.js CSS injection
         sendResponse({ ok: true });
+        return true;
+      }
+      if (msg && msg.type === "EXTRACT_TEXT") {
+        try { sendResponse({ text: extractVisibleText() }); }
+        catch (e) { sendResponse({ text: '' }); }
         return true;
       }
     } catch (error) {
