@@ -474,28 +474,12 @@
   margin-top: 2px;
 }
 
-/* ── Footer logo strip ───────────────────────────────────────────── */
+/* ── Footer always flush bottom ──────────────────────────────────── */
 .bottombar {
-  height: auto !important;
-}
-.bottombar-logos {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 14px;
-  padding: 7px 14px;
-}
-.bottombar-logo {
-  display: block;
-  height: 18px;
-  width: auto;
-  opacity: 0.75;
-  filter: invert(1);
-  transition: opacity 0.15s ease;
-}
-.bottombar-logo:hover {
-  opacity: 1;
-}
-.bottombar-logo--rfh {
-  height: 20px;
+  position: fixed !important;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 95;
+  height: 10px;
 }
