@@ -407,6 +407,13 @@
               <input type="color" class="cc-color-inp" id="ccFgPicker" value="#000000" title="Choose foreground color" />
               <input class="cc-hex-inp" type="text" id="ccFgHex" value="#000000" maxlength="7" spellcheck="false" aria-label="Foreground hex color" />
             </div>
+            <div class="cc-slider-row">
+              <input type="range" class="cc-light-slider" id="ccFgLight" min="0" max="100" value="0" aria-label="Foreground lightness" />
+              <div class="cc-alpha-wrap">
+                <span class="cc-alpha-lbl">α</span>
+                <input type="number" class="cc-alpha-inp" id="ccFgAlpha" min="0" max="1" step="0.01" value="1" aria-label="Foreground alpha" />
+              </div>
+            </div>
           </div>
 
           <button class="cc-swap-btn" id="ccSwap" title="Swap foreground and background" aria-label="Swap colors">
@@ -421,6 +428,9 @@
             <div class="cc-color-row">
               <input type="color" class="cc-color-inp" id="ccBgPicker" value="#ffffff" title="Choose background color" />
               <input class="cc-hex-inp" type="text" id="ccBgHex" value="#ffffff" maxlength="7" spellcheck="false" aria-label="Background hex color" />
+            </div>
+            <div class="cc-slider-row">
+              <input type="range" class="cc-light-slider" id="ccBgLight" min="0" max="100" value="100" aria-label="Background lightness" />
             </div>
           </div>
         </div>
@@ -512,6 +522,15 @@
               <span class="cc-wcag-verdict" id="wcagUiV">—</span>
             </div>
           </div>
+
+          <button class="cc-webaim-btn" id="ccWebAim">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+              <polyline points="15 3 21 3 21 9"/>
+              <line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+            Open in WebAIM Contrast Checker
+          </button>
         </div>
 
       </section>
