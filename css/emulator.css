@@ -210,8 +210,6 @@
 .emulator-device-list {
   border-top: 1px solid var(--md-sys-color-outline-variant);
   margin-top: 4px;
-  max-height: 192px;
-  overflow-y: auto;
 }
 
 .emulator-list-empty {
@@ -376,18 +374,23 @@
   border-bottom: 2px solid var(--md-sys-color-primary) !important;
 }
 
-/* Action row — sticky at bottom so it never scrolls away */
+/* Override section overflow so position:sticky works on the actions row.
+   base.css sets .section { overflow: hidden } which silently kills sticky. */
+#content-screenemulator .section {
+  overflow: visible;
+}
+
+/* Action row — sticky at bottom of viewport, above the 10px footer */
 .emulator-actions {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 10px 16px 14px;
   position: sticky;
-  bottom: 0;
+  bottom: 10px;
   z-index: 10;
   background: var(--md-sys-color-surface);
   border-top: 1px solid var(--md-sys-color-outline-variant);
-  margin-top: auto;
 }
 
 .emulator-open-btn {
