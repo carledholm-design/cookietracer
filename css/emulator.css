@@ -222,6 +222,23 @@
   font-style: italic;
 }
 
+.emulator-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 4px 12px 3px;
+  background: var(--md-sys-color-surface-container-high);
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.emulator-list-count {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
 .emulator-device-item {
   display: flex;
   align-items: center;
@@ -359,12 +376,18 @@
   border-bottom: 2px solid var(--md-sys-color-primary) !important;
 }
 
-/* Action row */
+/* Action row — sticky at bottom so it never scrolls away */
 .emulator-actions {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 10px 16px 14px;
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  background: var(--md-sys-color-surface);
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+  margin-top: auto;
 }
 
 .emulator-open-btn {
