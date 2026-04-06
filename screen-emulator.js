@@ -131,6 +131,12 @@ class ScreenEmulator {
   // ── Device list management ──────────────────────────────────────────
 
   addDevice(device) {
+    if (this.selectedDevices.length >= 5) {
+      if (typeof showToast === 'function') {
+        showToast('Max 5 windows — remove one to add another', 'warning');
+      }
+      return;
+    }
     const uid = ++this.uidCounter;
     this.selectedDevices.push({ device, isLandscape: false, uid });
     this.renderDeviceList();
@@ -162,7 +168,10 @@ class ScreenEmulator {
       return;
     }
 
-    list.innerHTML = '';
+    const atMax = this.selectedDevices.length >= 5;
+    list.innerHTML = `<div class="emulator-list-header">
+      <span class="emulator-list-count">${this.selectedDevices.length} / 5 windows${atMax ? ' · Max reached' : ''}</span>
+    </div>`;
 
     this.selectedDevices.forEach(entry => {
       const { device, isLandscape, uid } = entry;
@@ -290,7 +299,6 @@ class ScreenEmulator {
         });
         if (resp?.ok) {
           this.overlayActive = true;
-          this.saveOverlayState();
         } else {
           console.error('Screen Emulator: background error —', resp?.error);
         }
@@ -323,7 +331,6 @@ class ScreenEmulator {
       }
 
       this.overlayActive = false;
-      this.saveOverlayState();
       setTimeout(() => {
         closeBtn.innerHTML = originalHTML;
         this.updateActionButtons();
@@ -377,12 +384,6 @@ class ScreenEmulator {
     } catch (e) {}
   }
 
-  saveOverlayState() {
-    try {
-      chrome.storage.session.set({ emulatorOverlayActive: this.overlayActive });
-    } catch (e) {}
-  }
-
   restoreState() {
     try {
       chrome.storage.local.get(['emulatorState'], (result) => {
@@ -393,20 +394,13 @@ class ScreenEmulator {
         if (catBtn) catBtn.click();
 
         if (Array.isArray(saved.devices)) {
-          saved.devices.forEach(entry => {
+          saved.devices.slice(0, 5).forEach(entry => {
             const uid = ++this.uidCounter;
             this.selectedDevices.push({ device: entry.device, isLandscape: entry.isLandscape, uid });
           });
           this.renderDeviceList();
           this.updateOpenBtn();
         }
-      });
-
-      // Restore overlay active state from session storage so the
-      // Close Emulator button reflects reality after popup reopen
-      chrome.storage.session.get(['emulatorOverlayActive'], (result) => {
-        this.overlayActive = !!result.emulatorOverlayActive;
-        this.updateActionButtons();
       });
     } catch (e) {}
   }
